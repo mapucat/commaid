@@ -2,6 +2,8 @@
  * Possible executable accions in a project
  */
 
+import { Project } from "../src/project";
+
 export interface Commands<T> {
     clone: T,
     install: T,
@@ -13,6 +15,12 @@ export interface Commands<T> {
  * Class used to manage projects
  */
 export interface IProjectManager {
+
+    /**
+     * Check config file existence
+     */
+    configFileExists(): boolean;
+
     /**
      * Generate commaid config folder
      */
@@ -22,6 +30,25 @@ export interface IProjectManager {
      * Copy sample configs into config folder
      */
     generateConfigFile(): void;
+
+    /**
+     * Load configuration defined in config file
+     */
+    loadProjectsFromFile(): void
+
+    /**
+     * Execute a command in a specific project
+     * @param command command to execute, must be defined inside Commands properties
+     * @param project project in which the command will be executed
+     */
+    execCommand(command: keyof Commands<string>, project: Project): void
+
+    /**
+     * Execute a command in several projects
+     * @param command ommand to execute, must be defined inside Commands properties
+     * @param projectNames project's names in which the command will be executed
+     */
+    executeCommandsForProjects(command: keyof Commands<string>, projectNames: string[]): void
 }
 
 /**

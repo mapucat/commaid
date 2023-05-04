@@ -29,3 +29,13 @@ export const HELP_TEXT = {
 Access commaid files in ~/.commaid
     `
 };
+
+/**
+ * Common commands used in projects
+ */
+export const COMMON_COMMANDS: Commands<string> = {
+    clone: 'git clone <url>',
+    install: 'npm install',
+    updateCurrentBranch: 'git pull',
+    updateBaseBranch: 'git fetch --prune && git checkout <main-branch> && git pull origin <main-branch>'
+};

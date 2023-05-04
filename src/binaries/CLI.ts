@@ -3,7 +3,7 @@
 import chalk          from 'chalk';
 import { program }    from 'commander';
 
-import { constants, HELP_TEXT }  from '../constants'
+import { constants, HELP_TEXT }  from '../constants';
 import ProjectManager from '../project-manager';
 import logger         from '../helpers/logger';
 import { version }    from '../../package.json';
@@ -11,7 +11,6 @@ import { version }    from '../../package.json';
 const projectManager = new ProjectManager();
 
 program.version(version)
-    .option('--cwd <cwd>', 'current working directory')
     .usage('<command> [options] [projects...]')
     .addHelpText('afterAll', HELP_TEXT.afterAll)
     .showHelpAfterError();
@@ -37,7 +36,24 @@ program
     .action(() => {
         try {
             projectManager.generateConfigFile();
-            logger.info(`Config file ${constants.CONFIG_FILE} have been created in ${constants.CONFIG_FOLDER}. Update the file with your own values.`);
+        } catch (error) {
+            logger.err(error);
+            process.exit(constants.ERROR_EXIT);
+        }
+    });
+
+//
+// Clone command
+//
+program
+    .command('clone')
+    .description('Clone a list of projects')
+    .argument('[projectNames...]', 'List of projects to be affected (default: all)')
+    .action((projectNames: string[]) => {
+        try {
+            projectManager.loadProjectsFromFile();
+            projectManager.executeCommandsForProjects(
+                'clone', projectNames.length === 0 ? Object.keys(projectManager.allProjects) : projectNames);
         } catch (error) {
             logger.err(error);
             process.exit(constants.ERROR_EXIT);

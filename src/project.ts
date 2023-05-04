@@ -24,8 +24,8 @@ export class Project implements IProject<(...args: string[]) => void> {
     }
 
     announceCommand = (command: string) => {
-        // console.log(`\n\n> `);
-        logger.info(constants.PREFIX_MSG + `${command} for ${this.name}\n`);
+        logger.info(`> Project: ${this.name}`);
+        logger.info(`> ${command}\n`);
     }
 
     clone = () => {
@@ -37,7 +37,7 @@ export class Project implements IProject<(...args: string[]) => void> {
 
     install = () => {
         const command = this.commands.install;
-        logger.info(constants.PREFIX_MSG + `${command} for ${this.name}\n`);
+        this.announceCommand(command);
         execSync(command, { cwd: `${this.cwd}\\${this.name}`, stdio: 'inherit' });
     }
 
