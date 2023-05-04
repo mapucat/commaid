@@ -1,14 +1,25 @@
 {
   "name": "commaid",
-  "version": "1.0.0",
+  "preferGlobal": true,
+  "version": "0.5.0",
+  "engines": {
+    "node": ">=14.21.3"
+  },
+  "directories": {
+    "bin": "./bin",
+    "lib": "./lib",
+    "src": "./src",
+    "example": "./examples"
+  },
   "description": "Manage several projects simultaneously",
-  "main": "bin/commaid.js",
+  "main": "bin/commaid",
   "scripts": {
     "build": "tsc",
     "test": "jest"
   },
   "bin": {
-    "commaid": "./bin/commaid.js"
+    "commaid": "./bin/commaid",
+    "maid": "./bin/commaid"
   },
   "repository": {
     "type": "git",
@@ -17,13 +28,8 @@
   "keywords": [
     "commaid",
     "maid",
-    "project",
-    "management",
-    "run",
-    "commands",
-    "in",
-    "several",
-    "projects"
+    "projects",
+    "management"
   ],
   "author": "Maria Paula Rodriguez Escobar",
   "license": "MIT",
@@ -32,9 +38,14 @@
   },
   "homepage": "https://github.com/mapuroglob/commaid#readme",
   "devDependencies": {
+    "@types/node": "^14.18.43",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
     "@typescript-eslint/parser": "^5.57.0",
     "eslint": "^8.36.0",
     "typescript": "^5.0.2"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^10.0.0"
   }
 }

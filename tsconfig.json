@@ -1,12 +1,17 @@
 {
-    "compilerOptions": {
-      "module": "commonjs",
-      "esModuleInterop": true,
-      "target": "es6",
-      "moduleResolution": "node",
-      "sourceMap": true,
-      "outDir": "bin"
-    },
-    "exclude": ["node_modules"],
-    "lib": ["es2015"]
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es6",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "./lib",
+    "resolveJsonModule": true
+  },
+  "exclude": [
+    "node_modules",
+    "./lib/**/*",
+    "**/*.spec.ts"
+  ],
+  "lib": ["es2015"]
 }

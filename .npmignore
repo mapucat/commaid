@@ -1,0 +1,7 @@
+test
+*.pid
+.cache-require-paths.json
+*.heapsnapshot
+artifacts
+.editorconfig
+.DS_Store
