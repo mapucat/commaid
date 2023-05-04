@@ -1,0 +1,18 @@
+{
+    "projectsLocation": "/Users/user-name/Documents/code",
+    "runnableProjects": [
+        {
+            "name": "freeCodeCamp",
+            "originUrl": "git@github.com:freeCodeCamp/freeCodeCamp.git",
+            "baseBranch": "main"
+        }
+    ],
+    "noRunnableProjects": [
+        {
+            "name": "pm2",
+            "originUrl": "git@github.com:Unitech/pm2.git",
+            "baseBranch": "master",
+            "cwd": "/Users/user-name/Documents/code2"
+        }
+    ]
+}

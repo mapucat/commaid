@@ -37,6 +37,27 @@ Using NPM:
 npm install commaid -g
 ```
 
+### Configuration
+
+Config folder is defined as `~/.commaid` by default.
+Config file's name is `projects-config.json` by default.
+
+#### Update
+
+This values could be updated modifying `CONFIG_FOLDER` and `CONFIG_FILE` constants inside `src/constants.ts`.
+
+## Scripts available
+
+There are some facilities that have been created to improve your mental health working with several projects.
+
+### Generate initial config file
+
+Generate a default file with sample values into config folder.
+
+```bash
+commaid init
+```
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
