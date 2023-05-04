@@ -1,6 +1,5 @@
 'use strict';
 
-import chalk          from 'chalk';
 import { program }    from 'commander';
 
 import { constants, HELP_TEXT }  from '../constants';
@@ -43,7 +42,7 @@ program
     });
 
 //
-// Clone command
+// Git commands
 //
 program
     .command('clone')
@@ -61,13 +60,28 @@ program
         }
     });
 
+program
+    .command('install')
+    .description('Install a list of projects')
+    .option('-s --stop-on-error', 'Stop process on clone error')
+    .argument('[projectNames...]', 'List of projects to be affected (default: all)')
+    .action((projectNames: string[], options: { stopOnError: boolean }) => {
+        try {
+            projectManager.loadProjectsFromFile();
+            projectManager.executeCommandsForProjects(
+                'install', projectNames.length === 0 ? Object.keys(projectManager.allProjects) : projectNames, options);
+        } catch (error) {
+            logger.err(error);
+            process.exit(constants.ERROR_EXIT);
+        }
+    });
+
 //
 // Catch all
 //
 program.command('*')
     .action(function () {
-        logger.err(constants.PREFIX_MSG_ERR + chalk.bold('Command not found\n'));
-        // displayUsage();
+        logger.err('Command not found\n');
         // Check if it does not forget to close fds from RPC
         process.exit(constants.ERROR_EXIT);
     });

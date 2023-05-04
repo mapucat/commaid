@@ -1,5 +1,7 @@
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';
+import path from 'path';
+
 import { COMMON_COMMANDS } from '../src/constants';
 import { Commands, IProject, ProjectDefinition } from '../types/index';
 import logger from './helpers/logger';
@@ -10,8 +12,8 @@ import logger from './helpers/logger';
 export class Project implements IProject<(...args: string[]) => void> {
     name: string;
     originUrl: string;
-    baseBranch: string;
     cwd: string;
+    baseBranch: string;
     commands: Commands<string> = COMMON_COMMANDS;
 
     constructor(pd: ProjectDefinition, projectsLocation: string){
@@ -40,18 +42,18 @@ export class Project implements IProject<(...args: string[]) => void> {
     install = () => {
         const command = this.commands.install;
         this.announceCommand(command);
-        execSync(command, { cwd: `${this.cwd}\\${this.name}`, stdio: 'inherit' });
+        execSync(command, { cwd: path.join(this.cwd, this.name), stdio: 'inherit' });
     }
 
     updateCurrentBranch = () => {
         const command = this.commands.updateCurrentBranch;
         this.announceCommand(command);
-        execSync(command, { cwd: `${this.cwd}\\${this.name}`, stdio: 'inherit' });
+        execSync(command, { cwd: path.join(this.cwd, this.name), stdio: 'inherit' });
     }
 
     updateBaseBranch() {
         const command = this.commands.updateBaseBranch.replace('<main-branch>', this.baseBranch).replace('<main-branch>', this.baseBranch);
         this.announceCommand(command);
-        execSync(command, { cwd: `${this.cwd}\\${this.name}`, stdio: 'inherit' });
+        execSync(command, { cwd: path.join(this.cwd, this.name), stdio: 'inherit' });
     }
 }

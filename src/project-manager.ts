@@ -1,5 +1,6 @@
 import { execSync } from "child_process";
 import { existsSync, readFileSync } from "fs";
+import path from "path"; 
 
 import { constants } from "./constants";
 import { Commands, IProjectManager, ProcessingOptions, ProjectDefinition, ProjectManagerDefinition } from "../types/index";
@@ -11,7 +12,7 @@ import logger from "./helpers/logger";
  */
 export default class ProjectManager implements IProjectManager {
 
-    CONFIG_FILE_PATH = `${constants.CONFIG_FOLDER}/${constants.CONFIG_FILE}`;
+    CONFIG_FILE_PATH = path.join(constants.CONFIG_FOLDER, constants.CONFIG_FILE);
 
     runnableProjects: { [x: string]: Project } = {};
     noRunnableProjects: { [x: string]: Project } = {};
@@ -30,7 +31,7 @@ export default class ProjectManager implements IProjectManager {
         if (this.configFileExists()) {
             throw new Error(`Config file can not be generated, ${constants.CONFIG_FILE} have been found in ${constants.CONFIG_FOLDER}.`);
         } else {
-            execSync(`cp ./configs/project-names-example.json ${constants.CONFIG_FOLDER}/${constants.CONFIG_FILE}`, { stdio: 'inherit' });
+            execSync(`cp ./configs/project-names-example.json ${this.CONFIG_FILE_PATH}`, { stdio: 'inherit' });
             logger.info(`Config file ${constants.CONFIG_FILE} have been created in ${constants.CONFIG_FOLDER}. Update the file with your own values.`);
         }
     }
@@ -68,7 +69,8 @@ export default class ProjectManager implements IProjectManager {
         for (const projectName of projectNames) {
             if (!(projectName in projectList)) 
                 throw new Error(
-                    `Project \`${projectName}\` is not specified in \`${constants.CONFIG_FOLDER}/${constants.CONFIG_FILE}\` file.\nTo solve this error, you may need to check the project's config and make sure that \`${projectName}\` project is correctly defined.`);
+                    `Project \`${projectName}\` is not specified in \`${this.CONFIG_FILE_PATH}\` file.
+        To solve this error, you may need to check the project's config and make sure that \`${projectName}\` project is correctly defined.`);
             try {
                 this.execCommand(command, projectList[projectName]);
             } catch(error) {

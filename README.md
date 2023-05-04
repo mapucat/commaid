@@ -92,6 +92,27 @@ commaid clone
 commaid clone project1 project2
 ```
 
+### `install` projects
+
+Install the projects defined on runnableProjects AND noRunnableProjects in `CONFIG_FILE`.
+The workind directory for these projects corresponds to the one defined on projectsLocation in `CONFIG_FILE`.
+
+```bash
+commaid install [<projectName1> <projectName2> <projectNameN> ...]
+```
+
+- Install ALL projects.
+
+```bash
+commaid install
+```
+
+- Clone SOME projects.
+
+```bash
+commaid install project1 project2
+```
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
