@@ -14,7 +14,7 @@
 ```
 
 <div align="center">
-    <img alt="GitHub package.json version (branch)" src="https://img.shields.io/github/package-json/v/mapuroglob/commaid/master">
+    <img alt="GitHub package.json version (branch)" src="https://img.shields.io/github/package-json/v/mapuroglob/commaid/develop">
 </div>
 
 # Commaid
@@ -35,7 +35,7 @@ You can install Node.js easily with [NVM](https://github.com/nvm-sh/nvm#installi
 Using NPM:
 
 ```bash
-npm install commaid -g
+npm install -g commaid
 ```
 
 ### Configurations
@@ -52,10 +52,8 @@ Use `.env-sample` file as example and replace vars values.
 **Environment Values**
 
 | Variable       | Required      | Description                                           |
-
 | -------------- | ------------- | ----------------------------------------------------- |
-
-| `USER`         | TRUE          | Value to be replaced on a url for some projects.    |
+| `USER`         | TRUE          | Value to be replaced on a url for some projects.      |
 
 #### Update
 
@@ -79,19 +77,19 @@ Clone the projects defined on runnableProjects AND noRunnableProjects in `CONFIG
 The workind directory for these projects corresponds to the one defined on projectsLocation in `CONFIG_FILE`.
 
 ```bash
-    commaid clone [<projectName1> <projectName2> <projectNameN> ...]
+commaid clone [<projectName1> <projectName2> <projectNameN> ...]
 ```
 
 - Clone ALL projects.
 
 ```bash
-    commaid clone
+commaid clone
 ```
 
 - Clone SOME projects.
 
 ```bash
-    commaid clone project1 project2
+commaid clone project1 project2
 ```
 
 ## Contributing
