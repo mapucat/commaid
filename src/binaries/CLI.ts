@@ -48,12 +48,13 @@ program
 program
     .command('clone')
     .description('Clone a list of projects')
+    .option('-s --stop-on-error', 'Stop process on clone error')
     .argument('[projectNames...]', 'List of projects to be affected (default: all)')
-    .action((projectNames: string[]) => {
+    .action((projectNames: string[], options: { stopOnError: boolean }) => {
         try {
             projectManager.loadProjectsFromFile();
             projectManager.executeCommandsForProjects(
-                'clone', projectNames.length === 0 ? Object.keys(projectManager.allProjects) : projectNames);
+                'clone', projectNames.length === 0 ? Object.keys(projectManager.allProjects) : projectNames, options);
         } catch (error) {
             logger.err(error);
             process.exit(constants.ERROR_EXIT);

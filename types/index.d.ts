@@ -48,7 +48,7 @@ export interface IProjectManager {
      * @param command ommand to execute, must be defined inside Commands properties
      * @param projectNames project's names in which the command will be executed
      */
-    executeCommandsForProjects(command: keyof Commands<string>, projectNames: string[]): void
+    executeCommandsForProjects(command: keyof Commands<string>, projectNames: string[], options: ProcessingOptions): void
 }
 
 /**
@@ -150,4 +150,11 @@ export interface IProject<FunctionType> extends Commands<FunctionType> {
      * Execute command to install repository
      */
     updateBaseBranch: FunctionType;
+}
+
+/**
+ * Processing options
+ */
+export interface ProcessingOptions {
+    stopOnError?: boolean
 }

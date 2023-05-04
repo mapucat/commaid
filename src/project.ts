@@ -1,6 +1,6 @@
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';
-import { COMMON_COMMANDS, constants } from '../src/constants';
+import { COMMON_COMMANDS } from '../src/constants';
 import { Commands, IProject, ProjectDefinition } from '../types/index';
 import logger from './helpers/logger';
 
@@ -24,8 +24,10 @@ export class Project implements IProject<(...args: string[]) => void> {
     }
 
     announceCommand = (command: string) => {
-        logger.info(`> Project: ${this.name}`);
-        logger.info(`> ${command}\n`);
+        console.log('');
+        logger.info(`Project: ${this.name}`);
+        console.log('');
+        console.log(`> ${command}\n`);
     }
 
     clone = () => {

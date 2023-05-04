@@ -2,7 +2,7 @@ import { execSync } from "child_process";
 import { existsSync, readFileSync } from "fs";
 
 import { constants } from "./constants";
-import { Commands, IProjectManager, ProjectDefinition, ProjectManagerDefinition } from "../types/index";
+import { Commands, IProjectManager, ProcessingOptions, ProjectDefinition, ProjectManagerDefinition } from "../types/index";
 import { Project } from "./project";
 import logger from "./helpers/logger";
 
@@ -63,14 +63,17 @@ export default class ProjectManager implements IProjectManager {
         }
     }
     
-    executeCommandsForProjects = (command: keyof Commands<string>, projectNames: string[]) => {
+    executeCommandsForProjects = (command: keyof Commands<string>, projectNames: string[], options: ProcessingOptions) => {
         const projectList = { ...this.runnableProjects, ...this.noRunnableProjects };
         for (const projectName of projectNames) {
-            if (projectName in projectList) {
-                this.execCommand(command, projectList[projectName]);
-            } else {
+            if (!(projectName in projectList)) 
                 throw new Error(
                     `Project \`${projectName}\` is not specified in \`${constants.CONFIG_FOLDER}/${constants.CONFIG_FILE}\` file.\nTo solve this error, you may need to check the project's config and make sure that \`${projectName}\` project is correctly defined.`);
+            try {
+                this.execCommand(command, projectList[projectName]);
+            } catch(error) {
+                if (options.stopOnError) throw error;
+                logger.err(error);
             }
         }
     };
