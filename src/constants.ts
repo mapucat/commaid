@@ -4,7 +4,13 @@ import path from 'path';
 import { Commands } from '../types';
 
 /**
- * Constants variables used by ComMaid
+ * Config values
+ */
+const CONFIG_FOLDER = path.join(process.env.HOME, '.commaid');
+const CONFIG_FILE = 'projects-config.json';
+
+/**
+ * Constants variables used by Commaid
  */
 export const constants = {
     PREFIX_MSG: chalk.green('[COMMAID] '),
@@ -16,8 +22,9 @@ export const constants = {
     SUCCESS_EXIT: 0,
     ERROR_EXIT: 1,
 
-    CONFIG_FOLDER: path.join(process.env.HOME, '.commaid'),
-    CONFIG_FILE: 'projects-config.json',
+    CONFIG_FOLDER: CONFIG_FOLDER,
+    CONFIG_FILE: CONFIG_FILE,
+    CONFIG_FILE_PATH: path.join(CONFIG_FOLDER, CONFIG_FILE)
 };
 
 /**
@@ -36,6 +43,5 @@ Access commaid files in ~/.commaid
 export const COMMON_COMMANDS: Commands<string> = {
     clone: 'git clone <url>',
     install: 'npm install',
-    updateWorkingBranch: 'git pull',
-    updateBaseBranch: 'git fetch --prune && git checkout <main-branch> && git pull origin <main-branch>'
+    update: 'git checkout <branch> && git pull origin <branch>'
 };

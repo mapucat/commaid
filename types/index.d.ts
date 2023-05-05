@@ -7,8 +7,7 @@ import { Project } from "../src/project";
 export interface Commands<T> {
     clone: T,
     install: T,
-    updateWorkingBranch: T,
-    updateBaseBranch: T
+    update: T
 }
 
 /**
@@ -41,7 +40,7 @@ export interface IProjectManager {
      * @param command command to execute, must be defined inside Commands properties
      * @param project project in which the command will be executed
      */
-    execCommand(command: keyof Commands<string>, project: Project): void
+    execCommand(command: keyof Commands<string>, project: Project, options: ProcessingOptions): void
 
     /**
      * Execute a command in several projects
@@ -98,9 +97,18 @@ export interface ProjectDefinition {
     user: string;
 
     /**
-     * Project's base branch.
+     * Project's branches.
      */
-    baseBranch: string;
+    branches: {
+        /**
+         * Base project's branch
+         */
+        main: string;
+        /**
+         * Others branches
+         */
+        [x: string]: string;
+    };
 
     /**
      * Specific project's location
@@ -123,31 +131,12 @@ export interface IProject<FunctionType> extends ProjectDefinition, Commands<Func
      * @param command command to be executed.
      */
     announceCommand(command: string): void;
-
-    /**
-     * Execute command to clone repository.
-     */
-    clone: FunctionType;
-
-    /**
-     * Execute command to install repository.
-     */
-    install: FunctionType;
-
-    /**
-     * Execute command to update working branch into repository.
-     */
-    updateWorkingBranch: FunctionType;
-
-    /**
-     * Execute command to update main branch into repository.
-     */
-    updateBaseBranch: FunctionType;
 }
 
 /**
  * Processing options.
  */
 export interface ProcessingOptions {
-    stopOnError?: boolean
+    stopOnError?: boolean,
+    branch?: string
 }

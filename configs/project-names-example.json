@@ -6,14 +6,20 @@
             "name": "freeCodeCamp",
             "user": "specific_user",
             "originUrl": "git@github.com:freeCodeCamp/freeCodeCamp.git",
-            "baseBranch": "main"
+            "branches": {
+                "main": "main",
+                "dev": "develop"
+            }
         }
     ],
     "noRunnableProjects": [
         {
             "name": "pm2",
             "originUrl": "git@github.com:Unitech/pm2.git",
-            "baseBranch": "master",
+            "branches": {
+                "main": "master",
+                "dev": "development"
+            },
             "cwd": "/Users/user-name/Documents/code2"
         }
     ]

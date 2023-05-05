@@ -63,13 +63,30 @@ program
 program
     .command('install')
     .description('Install a list of projects')
-    .option('-s --stop-on-error', 'Stop process on installation error')
+    .option('-s --stop-on-error', 'Stop process on install error')
     .argument('[projectNames...]', 'List of projects to be affected (default: all)')
     .action((projectNames: string[], options: { stopOnError: boolean }) => {
         try {
             projectManager.loadProjectsFromFile();
             projectManager.executeCommandsForProjects(
                 'install', projectNames.length === 0 ? Object.keys(projectManager.allProjects) : projectNames, options);
+        } catch (error) {
+            logger.err(error);
+            process.exit(constants.ERROR_EXIT);
+        }
+    });
+
+program
+    .command('update')
+    .description('Update a list of projects')
+    .option('-s --stop-on-error', 'Stop process on update error')
+    .argument('<branch>', 'Branch to be updated')
+    .argument('[projectNames...]', 'List of projects to be affected (default: all)')
+    .action((branch: string, projectNames: string[], options: { stopOnError: boolean }) => {
+        try {
+            projectManager.loadProjectsFromFile();
+            projectManager.executeCommandsForProjects(
+                'update', projectNames.length === 0 ? Object.keys(projectManager.allProjects) : projectNames, { ...options, branch });
         } catch (error) {
             logger.err(error);
             process.exit(constants.ERROR_EXIT);

@@ -78,31 +78,39 @@ Config file's name is `projects-config.json` by default.
 
 #### Attributes available
 
-**General:**
-| Field                | Required | Type            | Description                                                                      |
-| -------------------- | -------- | --------------- | -------------------------------------------------------------------------------- |
-| `cwd`                | TRUE     | string          | Projects main location.                                                          |
-| `user`               | TRUE     | string          | General project's git user. <br/> This value will be replaced on project's url.  |
-| `runnableProjects`   | TRUE     | Projects array  | Could be empty, projects that will be executed.                                  |
-| `noRunnableProjects` | TRUE     | Projects array  | Could be empty, projects that must not be executed.                              |
+**1. General:**
+| Field                 | Required | Type                         | Description                                                                      |
+| --------------------- | -------- | ---------------------------- | -------------------------------------------------------------------------------- |
+| `cwd`                 | TRUE     | string                       | Projects main location.                                                          |
+| `user`                | TRUE     | string                       | General project's git user. <br/> This value will be replaced on project's url.  |
+| `runnableProjects`*   | TRUE     | *Project <sup>2</sup>* array  | Could be empty, projects that will be executed.                                 |
+| `noRunnableProjects`* | TRUE     | *Project <sup>2</sup>* array  | Could be empty, projects that must not be executed.                             |
 
-**Project:**
+**2. Project:**
 | Field         | Required | Type    | Description                                                                       |
 | ------------- | -------- | ------- | --------------------------------------------------------------------------------- |
 | `name`        | TRUE     | string  | Project's name.                                                                   |
 | `originUrl`   | TRUE     | string  | Git project's url, could be the https or ssh url.                                 |
 | `user`        | FALSE    | string  | Specific project's git user. <br/> This value will be replaced on project's url.  |
-| `baseBranch`  | FALSE    | string  | Project's base branch.                                                            |
+| `branches`*   | FALSE    | string  | Project's *branches <sup>3</sup>*.                                                |
 | `cwd`         | FALSE    | string  | Specific project's location.                                                      |
 | `commands`    | FALSE    | string  | Possible executable accions in a project.                                         |
 
-**Commands:**
+**3. Branches:**
+
+- Important: All projects defined should keep the same branch structure.
+
+| Field                  | Required | Type    | Description                                                             |
+| ---------------------- | -------- | ------- | ----------------------------------------------------------------------- |
+| `main`                 | TRUE     | string  | Base project's branch.                                                  |
+| `x`                    | FALSE    | string  | Other branches. <br/> You could define the number of branches you want. |
+
+**4. Commands:**
 | Field                  | Required | Type    | Description                                       |
 | ---------------------- | -------- | ------- | ------------------------------------------------- |
 | `clone`                | FALSE    | string  | Project's name.                                   |
 | `install`              | FALSE    | string  | Git project's url, could be the https or ssh url. |
-| `updateWorkingBranch`  | FALSE    | string  | Project's base branch.                            |
-| `updateBaseBranch`     | FALSE    | string  | Specific project's location.                      |
+| `update`               | FALSE    | string  | Project's base branch.                            |
 
 ## Usage
 
@@ -192,6 +200,44 @@ commaid install project1 project2
 ```bash
 commaid install project1 project2 -s
 commaid install project1 project2 --stop-on-error
+```
+
+### `update` projects
+
+Update a branch into the projects defined on `runnableProjects` AND `noRunnableProjects` in `CONFIG_FILE`.
+The workind directory for these projects corresponds to the one defined on `cwd` in `CONFIG_FILE`.
+
+```bash
+commaid update [options] <branch> [projectNames...]
+
+Options
+    -s --stop-on-error  stop process on installation error
+```
+
+- Install ALL projects.
+
+```bash
+commaid update main
+```
+
+- Install ALL projects, stopping on errors.
+
+```bash
+commaid update main -s
+commaid update main --stop-on-error
+```
+
+- Install SOME projects.
+
+```bash
+commaid update main project1 project2
+```
+
+- Install SOME projects, stopping on errors.
+
+```bash
+commaid update main project1 project2 -s
+commaid update main project1 project2 --stop-on-error
 ```
 
 ## Contributing
