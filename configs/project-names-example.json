@@ -1,8 +1,10 @@
 {
-    "projectsLocation": "/Users/user-name/Documents/code",
+    "cwd": "/Users/user-name/Documents/code",
+    "user": "general_user",
     "runnableProjects": [
         {
             "name": "freeCodeCamp",
+            "user": "specific_user",
             "originUrl": "git@github.com:freeCodeCamp/freeCodeCamp.git",
             "baseBranch": "main"
         }

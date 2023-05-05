@@ -22,6 +22,7 @@
 Manage several projects simultaneously in one place
 
 **Important:**
+
 This project includes code adapted from PM2 by Strzelewicz Alexandre, available at [PM2]<https://www.npmjs.com/package/pm2>, licensed under the GNU AGPL 3.0 license.
 
 ## Requirements
@@ -30,7 +31,7 @@ Install [Node.js](https://nodejs.org/en/) version >=10.0.0
 
 You can install Node.js easily with [NVM](https://github.com/nvm-sh/nvm#installing-and-updating) or [ASDF](https://blog.natterstefan.me/how-to-use-multiple-node-version-with-asdf).
 
-### Install
+## Install
 
 Using NPM:
 
@@ -38,28 +39,74 @@ Using NPM:
 npm install -g commaid
 ```
 
-### Configurations
+## Configurations
 
-#### Files
+### Project's config folder
 
 Config folder is defined as `~/.commaid` by default.
+
+**Note:** This value could be updated modifying `CONFIG_FOLDER` constants inside `src/constants.ts`.
+
+### Project's config file
+
 Config file's name is `projects-config.json` by default.
 
-#### Environment variables
+**Note:** This value could be updated modifying `CONFIG_FILE` constants inside `src/constants.ts`.
 
-Use `.env-sample` file as example and replace vars values.
+```json
+{
+    "cwd": "/Users/user-name/Documents/code",
+    "user": "general_user",
+    "runnableProjects": [
+        {
+            "name": "freeCodeCamp",
+            "user": "specific_user",
+            "originUrl": "git@github.com:freeCodeCamp/freeCodeCamp.git",
+            "baseBranch": "main"
+        }
+    ],
+    "noRunnableProjects": [
+        {
+            "name": "pm2",
+            "originUrl": "git@github.com:Unitech/pm2.git",
+            "baseBranch": "master",
+            "cwd": "/Users/user-name/Documents/code2"
+        }
+    ]
+}
+```
 
-**Environment Values**
+#### Attributes available
 
-| Variable       | Required      | Description                                           |
-| -------------- | ------------- | ----------------------------------------------------- |
-| `USER`         | TRUE          | Value to be replaced on a url for some projects.      |
+**General:**
+| Field                | Required | Type            | Description                                                                      |
+| -------------------- | -------- | --------------- | -------------------------------------------------------------------------------- |
+| `cwd`                | TRUE     | string          | Projects main location.                                                          |
+| `user`               | TRUE     | string          | General project's git user. <br/> This value will be replaced on project's url.  |
+| `runnableProjects`   | TRUE     | Projects array  | Could be empty, projects that will be executed.                                  |
+| `noRunnableProjects` | TRUE     | Projects array  | Could be empty, projects that must not be executed.                              |
 
-#### Update
+**Project:**
+| Field         | Required | Type    | Description                                                                       |
+| ------------- | -------- | ------- | --------------------------------------------------------------------------------- |
+| `name`        | TRUE     | string  | Project's name.                                                                   |
+| `originUrl`   | TRUE     | string  | Git project's url, could be the https or ssh url.                                 |
+| `user`        | FALSE    | string  | Specific project's git user. <br/> This value will be replaced on project's url.  |
+| `baseBranch`  | FALSE    | string  | Project's base branch.                                                            |
+| `cwd`         | FALSE    | string  | Specific project's location.                                                      |
+| `commands`    | FALSE    | string  | Possible executable accions in a project.                                         |
 
-This values could be updated modifying `CONFIG_FOLDER` and `CONFIG_FILE` constants inside `src/constants.ts`.
+**Commands:**
+| Field                  | Required | Type    | Description                                       |
+| ---------------------- | -------- | ------- | ------------------------------------------------- |
+| `clone`                | FALSE    | string  | Project's name.                                   |
+| `install`              | FALSE    | string  | Git project's url, could be the https or ssh url. |
+| `updateWorkingBranch`  | FALSE    | string  | Project's base branch.                            |
+| `updateBaseBranch`     | FALSE    | string  | Specific project's location.                      |
 
-## Scripts available
+## Usage
+
+---
 
 There are some facilities that have been created to improve your mental health working with several projects.
 
@@ -73,11 +120,14 @@ commaid init
 
 ### `clone` projects
 
-Clone the projects defined on runnableProjects AND noRunnableProjects in `CONFIG_FILE`.
-The workind directory for these projects corresponds to the one defined on projectsLocation in `CONFIG_FILE`.
+Clone the projects defined on `runnableProjects` AND `noRunnableProjects` in `CONFIG_FILE`.
+The workind directory for these projects corresponds to the one defined on `cwd` in `CONFIG_FILE`.
 
 ```bash
-commaid clone [<projectName1> <projectName2> <projectNameN> ...]
+commaid clone [<projectName1> <projectName2> <projectNameN> ...] [options]
+
+Options
+    -s --stop-on-error  stop process on clone error
 ```
 
 - Clone ALL projects.
@@ -86,19 +136,36 @@ commaid clone [<projectName1> <projectName2> <projectNameN> ...]
 commaid clone
 ```
 
+- Clone ALL projects, stopping on errors.
+
+```bash
+commaid clone -s
+commaid clone --stop-on-error
+```
+
 - Clone SOME projects.
 
 ```bash
 commaid clone project1 project2
 ```
 
-### `install` projects
-
-Install the projects defined on runnableProjects AND noRunnableProjects in `CONFIG_FILE`.
-The workind directory for these projects corresponds to the one defined on projectsLocation in `CONFIG_FILE`.
+- Clone SOME projects, stopping on errors.
 
 ```bash
-commaid install [<projectName1> <projectName2> <projectNameN> ...]
+commaid clone project1 project2 -s
+commaid clone project1 project2 --stop-on-error
+```
+
+### `install` projects
+
+Install the projects defined on `runnableProjects` AND `noRunnableProjects` in `CONFIG_FILE`.
+The workind directory for these projects corresponds to the one defined on `cwd` in `CONFIG_FILE`.
+
+```bash
+commaid install [<projectName1> <projectName2> <projectNameN> ...] [options]
+
+Options
+    -s --stop-on-error  stop process on installation error
 ```
 
 - Install ALL projects.
@@ -107,10 +174,24 @@ commaid install [<projectName1> <projectName2> <projectNameN> ...]
 commaid install
 ```
 
-- Clone SOME projects.
+- Install ALL projects, stopping on errors.
+
+```bash
+commaid install -s
+commaid install --stop-on-error
+```
+
+- Install SOME projects.
 
 ```bash
 commaid install project1 project2
+```
+
+- Install SOME projects, stopping on errors.
+
+```bash
+commaid install project1 project2 -s
+commaid install project1 project2 --stop-on-error
 ```
 
 ## Contributing

@@ -63,7 +63,7 @@ program
 program
     .command('install')
     .description('Install a list of projects')
-    .option('-s --stop-on-error', 'Stop process on clone error')
+    .option('-s --stop-on-error', 'Stop process on installation error')
     .argument('[projectNames...]', 'List of projects to be affected (default: all)')
     .action((projectNames: string[], options: { stopOnError: boolean }) => {
         try {

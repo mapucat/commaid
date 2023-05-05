@@ -36,6 +36,6 @@ Access commaid files in ~/.commaid
 export const COMMON_COMMANDS: Commands<string> = {
     clone: 'git clone <url>',
     install: 'npm install',
-    updateCurrentBranch: 'git pull',
+    updateWorkingBranch: 'git pull',
     updateBaseBranch: 'git fetch --prune && git checkout <main-branch> && git pull origin <main-branch>'
 };

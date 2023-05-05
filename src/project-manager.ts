@@ -43,14 +43,14 @@ export default class ProjectManager implements IProjectManager {
         }
         
         const data = readFileSync(this.CONFIG_FILE_PATH).toString();
-        const fileContent: ProjectManagerDefinition = JSON.parse(data) as ProjectManagerDefinition;
+        const { cwd, user, runnableProjects, noRunnableProjects }: ProjectManagerDefinition = JSON.parse(data) as ProjectManagerDefinition;
 
-        fileContent.runnableProjects.forEach((projectJSON: ProjectDefinition) => {
-            this.runnableProjects[projectJSON.name] = new Project(projectJSON, fileContent.projectsLocation);
+        runnableProjects.forEach((projectJSON: ProjectDefinition) => {
+            this.runnableProjects[projectJSON.name] = new Project(projectJSON, { cwd, user });
         });
 
-        fileContent.noRunnableProjects.forEach((projectJSON: ProjectDefinition) => {
-            this.noRunnableProjects[projectJSON.name] = new Project(projectJSON, fileContent.projectsLocation);
+        noRunnableProjects.forEach((projectJSON: ProjectDefinition) => {
+            this.noRunnableProjects[projectJSON.name] = new Project(projectJSON, { cwd, user });
         });
 
         this.allProjects = { ...this.runnableProjects, ...this.noRunnableProjects };

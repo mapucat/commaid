@@ -13,15 +13,17 @@ export class Project implements IProject<(...args: string[]) => void> {
     name: string;
     originUrl: string;
     cwd: string;
+    user: string;
     baseBranch: string;
     commands: Commands<string> = COMMON_COMMANDS;
 
-    constructor(pd: ProjectDefinition, projectsLocation: string){
+    constructor(pd: ProjectDefinition, { cwd, user }: { cwd: string, user: string }){
         this.name = pd.name;
         this.originUrl = pd.originUrl;
         this.baseBranch = pd.baseBranch;
         // Set default properties
-        this.cwd = pd.cwd ? pd.cwd : `${projectsLocation}`;
+        this.cwd = pd.cwd ? pd.cwd : cwd;
+        this.user = pd.user ? pd.user : user;
         if (Object.keys(pd.commands || {}).length !== 0) this.commands = { ...COMMON_COMMANDS, ...pd.commands};
     }
 
@@ -33,7 +35,7 @@ export class Project implements IProject<(...args: string[]) => void> {
     }
 
     clone = () => {
-        const command = this.commands.clone.replace('<url>', this.originUrl).replace('<user>', process.env.USER);
+        const command = this.commands.clone.replace('<url>', this.originUrl).replace('<user>', this.user);
         this.announceCommand(command);
         if (!existsSync(this.cwd)) throw new Error(`Working directory \`${this.cwd}\` not found.`) 
         execSync(command, { cwd: this.cwd, stdio: 'inherit' });
@@ -45,8 +47,8 @@ export class Project implements IProject<(...args: string[]) => void> {
         execSync(command, { cwd: path.join(this.cwd, this.name), stdio: 'inherit' });
     }
 
-    updateCurrentBranch = () => {
-        const command = this.commands.updateCurrentBranch;
+    updateWorkingBranch = () => {
+        const command = this.commands.updateWorkingBranch;
         this.announceCommand(command);
         execSync(command, { cwd: path.join(this.cwd, this.name), stdio: 'inherit' });
     }
