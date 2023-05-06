@@ -6,6 +6,7 @@ import { constants, HELP_TEXT }  from '../constants';
 import ProjectManager from '../project-manager';
 import logger         from '../helpers/logger';
 import { version }    from '../../package.json';
+import { ProcessingOptions } from '../../types';
 
 const projectManager = new ProjectManager();
 
@@ -48,12 +49,12 @@ program
     .command('clone')
     .description('Clone a list of projects')
     .option('-s --stop-on-error', 'Stop process on clone error')
-    .argument('[projectNames...]', 'List of projects to be affected (default: all)')
-    .action((projectNames: string[], options: { stopOnError: boolean }) => {
+    .option('-p --projects [projects...]', 'List of projects to be affected (default: all)', [])
+    .action((options: ProcessingOptions) => {
         try {
             projectManager.loadProjectsFromFile();
             projectManager.executeCommandsForProjects(
-                'clone', projectNames.length === 0 ? Object.keys(projectManager.allProjects) : projectNames, options);
+                'clone', projectManager.getProjectNames(options.projects), options);
         } catch (error) {
             logger.err(error);
             process.exit(constants.ERROR_EXIT);
@@ -64,12 +65,12 @@ program
     .command('install')
     .description('Install a list of projects')
     .option('-s --stop-on-error', 'Stop process on install error')
-    .argument('[projectNames...]', 'List of projects to be affected (default: all)')
-    .action((projectNames: string[], options: { stopOnError: boolean }) => {
+    .option('-p --projects [projects...]', 'List of projects to be affected (default: all)', [])
+    .action((options: ProcessingOptions) => {
         try {
             projectManager.loadProjectsFromFile();
             projectManager.executeCommandsForProjects(
-                'install', projectNames.length === 0 ? Object.keys(projectManager.allProjects) : projectNames, options);
+                'install', projectManager.getProjectNames(options.projects), options);
         } catch (error) {
             logger.err(error);
             process.exit(constants.ERROR_EXIT);
@@ -79,14 +80,14 @@ program
 program
     .command('update')
     .description('Update a list of projects')
-    .option('-s --stop-on-error', 'Stop process on update error')
     .argument('<branch>', 'Branch to be updated')
-    .argument('[projectNames...]', 'List of projects to be affected (default: all)')
-    .action((branch: string, projectNames: string[], options: { stopOnError: boolean }) => {
+    .option('-s --stop-on-error', 'Stop process on update error')
+    .option('-p --projects [projects...]', 'List of projects to be affected (default: all)', [])
+    .action((branch: string, options: ProcessingOptions) => {
         try {
             projectManager.loadProjectsFromFile();
             projectManager.executeCommandsForProjects(
-                'update', projectNames.length === 0 ? Object.keys(projectManager.allProjects) : projectNames, { ...options, branch });
+                'update', projectManager.getProjectNames(options.projects), { ...options, branch });
         } catch (error) {
             logger.err(error);
             process.exit(constants.ERROR_EXIT);

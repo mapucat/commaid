@@ -19,6 +19,10 @@ export default class ProjectManager implements IProjectManager {
         return existsSync(constants.CONFIG_FILE_PATH);
     }
 
+    getProjectNames = (projectNamesTyped: string[]) => {
+        return projectNamesTyped?.length === 0 ? Object.keys(this.allProjects) : projectNamesTyped;
+    }
+
     generateConfigFolder = () => {
         execSync(`mkdir -p ${constants.CONFIG_FOLDER}`, { stdio: 'inherit' });
     }
@@ -62,14 +66,13 @@ export default class ProjectManager implements IProjectManager {
     }
     
     executeCommandsForProjects = (command: keyof Commands<string>, projectNames: string[], options: ProcessingOptions) => {
-        const projectList = { ...this.runnableProjects, ...this.noRunnableProjects };
         for (const projectName of projectNames) {
-            if (!(projectName in projectList)) 
+            if (!(projectName in this.allProjects)) 
                 throw new Error(
                     `Project \`${projectName}\` is not specified in \`${constants.CONFIG_FILE_PATH}\` file.
         To solve this error, you may need to check the project's config and make sure that \`${projectName}\` project is correctly defined.`);
             try {
-                this.execCommand(command, projectList[projectName], options);
+                this.execCommand(command, this.allProjects[projectName], options);
             } catch(error) {
                 if (options.stopOnError) throw error;
                 logger.err(error);

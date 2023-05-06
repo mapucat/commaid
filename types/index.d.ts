@@ -21,6 +21,11 @@ export interface IProjectManager {
     configFileExists(): boolean;
 
     /**
+     * get projects names given user's input
+     */
+    getProjectNames(projectNamesInput: string[]): string[];
+
+    /**
      * Generate commaid config folder
      */
     generateConfigFolder(): void;
@@ -137,6 +142,7 @@ export interface IProject<FunctionType> extends ProjectDefinition, Commands<Func
  * Processing options.
  */
 export interface ProcessingOptions {
+    projects?: string[],
     stopOnError?: boolean,
     branch?: string
 }
