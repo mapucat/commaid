@@ -2,8 +2,8 @@
 
 import { constants, HELP_TEXT }     from '../constants';
 import ProjectManager               from '../project-manager';
-import logger                       from '../helpers/logger';
-import { CommandWithRawArgs }       from '../helpers/commander';
+import logger                       from '../utils/logger';
+import { CommandWithRawArgs }       from '../utils/commander';
 import { ProcessingOptions }        from '../../types';
 import { version }                  from '../../package.json';
 

@@ -8,7 +8,7 @@ import { Commands,
     ProjectDefinition,
     ProjectManagerDefinition }      from "../types/index";
 import { Project }                  from "./project";
-import logger                       from "./helpers/logger";
+import logger                       from "./utils/logger";
 
 /**
  * @typedef { import("./types").IProjectManager } IProjectManager

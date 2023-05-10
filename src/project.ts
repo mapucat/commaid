@@ -9,7 +9,7 @@ import { Commands,
     ProcessingOptions,
     ProjectDefinition, 
     ProjectFunctionType }   from '../types/index';
-import logger               from './helpers/logger';
+import logger               from './utils/logger';
 
 /**
  * @typedef { import("./types").IProject } IProject
