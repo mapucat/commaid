@@ -1,19 +1,23 @@
-import { execSync } from "child_process";
+import { execSync }                 from "child_process";
 import { existsSync, readFileSync } from "fs";
 
-import { constants } from "./constants";
-import { Commands, IProjectManager, ProcessingOptions, ProjectDefinition, ProjectManagerDefinition } from "../types/index";
-import { Project } from "./project";
-import logger from "./helpers/logger";
+import { constants }                from "./constants";
+import { Commands,
+    IProjectManager,
+    ProcessingOptions,
+    ProjectDefinition,
+    ProjectManagerDefinition }      from "../types/index";
+import { Project }                  from "./project";
+import logger                       from "./helpers/logger";
 
 /**
  * @typedef { import("./types").IProjectManager } IProjectManager
  */
 export default class ProjectManager implements IProjectManager {
 
-    runnableProjects: { [x: string]: Project } = {};
-    noRunnableProjects: { [x: string]: Project } = {};
-    allProjects: { [x: string]: Project } = {};
+    runnableProjects = {};
+    noRunnableProjects = {};
+    allProjects = {};
 
     configFileExists = () => {
         return existsSync(constants.CONFIG_FILE_PATH);
@@ -65,7 +69,7 @@ export default class ProjectManager implements IProjectManager {
         }
     }
     
-    executeCommandsForProjects = (command: keyof Commands<string>, projectNames: string[], options: ProcessingOptions) => {
+    executeCommandsForProjects = (command: keyof Commands<string>, projectNames: string[], options: ProcessingOptions): void => {
         for (const projectName of projectNames) {
             if (!(projectName in this.allProjects)) 
                 throw new Error(

@@ -1,19 +1,22 @@
 'use strict';
 
-import { program }    from 'commander';
+import { constants, HELP_TEXT }     from '../constants';
+import ProjectManager               from '../project-manager';
+import logger                       from '../helpers/logger';
+import { CommandWithRawArgs }       from '../helpers/commander';
+import { ProcessingOptions }        from '../../types';
+import { version }                  from '../../package.json';
 
-import { constants, HELP_TEXT }  from '../constants';
-import ProjectManager from '../project-manager';
-import logger         from '../helpers/logger';
-import { version }    from '../../package.json';
-import { ProcessingOptions } from '../../types';
-
+const program = new CommandWithRawArgs();
 const projectManager = new ProjectManager();
 
 program.version(version)
     .usage('<command> [options] [projects...]')
     .addHelpText('afterAll', HELP_TEXT.afterAll)
-    .showHelpAfterError();
+    .showHelpAfterError()
+    .hook('preAction', () => {
+        projectManager.loadProjectsFromFile();
+    });
 
 /**
  * Define commands and arguments available
@@ -26,6 +29,19 @@ const beginCommandProcessing = () => {
         process.exit(constants.ERROR_EXIT);
     }
 }
+
+/**
+ * Get command's arguments
+ */
+function getCommandArgs(isNpmCommand: boolean): string[] {
+    let argsIndex: number;
+    let args = [];
+    if ((argsIndex = program.rawArgs.indexOf('--')) >= 0) {
+        args = program.rawArgs.slice(argsIndex + 1);
+        if (isNpmCommand) args.unshift('--');
+    }
+    return args;
+  } 
 
 //
 // Init config
@@ -52,7 +68,6 @@ program
     .option('-p --projects [projects...]', 'List of projects to be affected (default: all)', [])
     .action((options: ProcessingOptions) => {
         try {
-            projectManager.loadProjectsFromFile();
             projectManager.executeCommandsForProjects(
                 'clone', projectManager.getProjectNames(options.projects), options);
         } catch (error) {
@@ -68,7 +83,6 @@ program
     .option('-p --projects [projects...]', 'List of projects to be affected (default: all)', [])
     .action((options: ProcessingOptions) => {
         try {
-            projectManager.loadProjectsFromFile();
             projectManager.executeCommandsForProjects(
                 'install', projectManager.getProjectNames(options.projects), options);
         } catch (error) {
@@ -85,7 +99,6 @@ program
     .option('-p --projects [projects...]', 'List of projects to be affected (default: all)', [])
     .action((branch: string, options: ProcessingOptions) => {
         try {
-            projectManager.loadProjectsFromFile();
             projectManager.executeCommandsForProjects(
                 'update', projectManager.getProjectNames(options.projects), { ...options, branch });
         } catch (error) {
@@ -93,6 +106,22 @@ program
             process.exit(constants.ERROR_EXIT);
         }
     });
+
+program
+    .command('exec')
+    .description('Exec a command into a list of projects')
+    .requiredOption('-c --command <command...>', 'Required option, command to be executed')
+    .option('-s --stop-on-error', 'Stop process on update error')
+    .option('-p --projects [projects...]', 'List of projects to be affected (default: all)', [])
+    .action((options: ProcessingOptions) => {
+        try {
+            projectManager.executeCommandsForProjects(
+                'exec', projectManager.getProjectNames(options.projects), { ...options, command: [ ...options.command, ...getCommandArgs(options.command[0] === 'npm') ] });
+        } catch (error) {
+            logger.err(error);
+            process.exit(constants.ERROR_EXIT);
+        }
+    }).usage('[options] -c <command> [-- <args>]');
 
 //
 // Catch all

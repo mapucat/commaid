@@ -1,6 +1,6 @@
 
-import chalk from 'chalk';
-import path from 'path';
+import chalk        from 'chalk';
+import path         from 'path';
 import { Commands } from '../types';
 
 /**
@@ -43,5 +43,6 @@ Access commaid files in ~/.commaid
 export const COMMON_COMMANDS: Commands<string> = {
     clone: 'git clone <url>',
     install: 'npm install',
-    update: 'git checkout <branch> && git pull origin <branch>'
+    update: 'git checkout <branch> && git pull origin <branch>',
+    exec: ''
 };

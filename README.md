@@ -112,9 +112,9 @@ Config file's name is `projects-config.json` by default.
 | `install`              | FALSE    | string  | Git project's url, could be the https or ssh url. |
 | `update`               | FALSE    | string  | Project's base branch.                            |
 
-## Usage
-
 ---
+
+## Usage
 
 There are some facilities that have been created to improve your mental health working with several projects.
 
@@ -154,14 +154,14 @@ commaid clone --stop-on-error
 - Clone SOME projects.
 
 ```bash
-commaid clone project1 project2
+commaid clone -p project1 project2
 ```
 
 - Clone SOME projects, stopping on errors.
 
 ```bash
-commaid clone project1 project2 -s
-commaid clone project1 project2 --stop-on-error
+commaid clone -p project1 project2 -s
+commaid clone -p project1 project2 --stop-on-error
 ```
 
 ### `install` projects
@@ -174,6 +174,7 @@ commaid install [<projectName1> <projectName2> <projectNameN> ...] [options]
 
 Options
     -s --stop-on-error  stop process on installation error
+    -p --projects [projects...]', 'List of projects to be affected (default: all)
 ```
 
 - Install ALL projects.
@@ -192,14 +193,14 @@ commaid install --stop-on-error
 - Install SOME projects.
 
 ```bash
-commaid install project1 project2
+commaid install -p project1 project2
 ```
 
 - Install SOME projects, stopping on errors.
 
 ```bash
-commaid install project1 project2 -s
-commaid install project1 project2 --stop-on-error
+commaid install -p project1 project2 -s
+commaid install -p project1 project2 --stop-on-error
 ```
 
 ### `update` projects
@@ -212,32 +213,82 @@ commaid update [options] <branch> [projectNames...]
 
 Options
     -s --stop-on-error  stop process on installation error
+    -p --projects [projects...]', 'List of projects to be affected (default: all)
 ```
 
-- Install ALL projects.
+- Update ALL projects.
 
 ```bash
 commaid update main
 ```
 
-- Install ALL projects, stopping on errors.
+- Update ALL projects, stopping on errors.
 
 ```bash
 commaid update main -s
 commaid update main --stop-on-error
 ```
 
-- Install SOME projects.
+- Update SOME projects.
 
 ```bash
-commaid update main project1 project2
+commaid update main -p project1 project2
 ```
 
-- Install SOME projects, stopping on errors.
+- Update SOME projects, stopping on errors.
 
 ```bash
-commaid update main project1 project2 -s
-commaid update main project1 project2 --stop-on-error
+commaid update main -p project1 project2 -s
+commaid update main -p project1 project2 --stop-on-error
+```
+
+### `exec command` on projects
+
+Exec a command into the projects defined on `runnableProjects` AND `noRunnableProjects` in `CONFIG_FILE`.
+The workind directory for these projects corresponds to the one defined on `cwd` in `CONFIG_FILE`.
+
+```bash
+commaid exec [options] -c <command> [-- <args>]
+
+Options
+    -s --stop-on-error  stop process on installation error
+    -p --projects [projects...]', 'List of projects to be affected (default: all)
+```
+
+- Exec a command on ALL projects.
+
+```bash
+commaid exec -c npm run test
+# Using command args
+commaid exec -c npm run test -- -u -t="ColorPicker"
+```
+
+- Exec a command on ALL projects, stopping on errors.
+
+```bash
+commaid exec -s -c npm run test
+commaid exec --stop-on-error -c npm run test
+# Using command args
+commaid exec -s -c npm run test -- -u -t="ColorPicker"
+commaid exec --stop-on-error -c npm run test -- -u -t="ColorPicker"
+```
+
+- Exec a command on SOME projects.
+
+```bash
+commaid exec -p project1 project2 -c npm run test
+# Using command args
+commaid exec -p project1 project2 -c npm run test -- -u -t="ColorPicker"
+```
+
+- Exec a command on SOME projects, stopping on errors.
+
+```bash
+commaid exec -p project1 project2 -s -c npm run test
+commaid exec -p project1 project2 --stop-on-error -c npm run test
+# Using command args
+commaid exec -p project1 project2 -s -c npm run test -- -u -t="ColorPicker"
+commaid exec -p project1 project2 --stop-on-error -c npm run test -- -u -t="ColorPicker"
 ```
 
 ## Contributing

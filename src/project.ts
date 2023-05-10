@@ -1,15 +1,20 @@
-import { execSync } from 'child_process';
-import { existsSync } from 'fs';
-import path from 'path';
+import { execSync }         from 'child_process';
+import { existsSync }       from 'fs';
+import path                 from 'path';
 
-import { COMMON_COMMANDS, constants } from '../src/constants';
-import { Commands, IProject, ProcessingOptions, ProjectDefinition } from '../types/index';
-import logger from './helpers/logger';
+import { COMMON_COMMANDS,
+    constants }             from '../src/constants';
+import { Commands,
+    IProject,
+    ProcessingOptions,
+    ProjectDefinition, 
+    ProjectFunctionType }   from '../types/index';
+import logger               from './helpers/logger';
 
 /**
  * @typedef { import("./types").IProject } IProject
  */
-export class Project implements IProject<(...args: unknown[]) => void> {
+export class Project implements IProject<ProjectFunctionType> {
     name: string;
     originUrl: string;
     cwd: string;
@@ -54,5 +59,11 @@ export class Project implements IProject<(...args: unknown[]) => void> {
         const command = this.commands.update.replace(/<branch>/gi, this.branches[branch]);
         this.announceCommand(command);
         execSync(command, { cwd: path.join(this.cwd, this.name), stdio: 'inherit' });
+    }
+
+    exec({ command }: ProcessingOptions) {
+        const commandToExec = command.join(' ');
+        this.announceCommand(commandToExec);
+        execSync(commandToExec, { cwd: path.join(this.cwd, this.name), stdio: 'inherit' });
     }
 }

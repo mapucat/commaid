@@ -1,19 +1,37 @@
 /**
- * Possible executable accions in a project
+ * Default executable accions in a project
  */
-
-import { Project } from "../src/project";
-
 export interface Commands<T> {
-    clone: T,
-    install: T,
-    update: T
+    clone: T;
+    install: T;
+    update: T;
+    exec: T;
 }
+
+/**
+ * Project generic function's type
+ */
+export type ProjectFunctionType = (...args: unknown[]) => void;
 
 /**
  * Class used to manage projects
  */
 export interface IProjectManager {
+
+    /**
+     * List of runnable projects
+     */
+    runnableProjects: { [x: string]: ProjectFunctionType };
+
+    /**
+     * List of no runnable projects
+     */
+    noRunnableProjects: { [x: string]: ProjectFunctionType };
+
+    /**
+     * List of runnable and no runnable projects
+     */
+    allProjects: { [x: string]: ProjectFunctionType };
 
     /**
      * Check config file existence
@@ -45,7 +63,7 @@ export interface IProjectManager {
      * @param command command to execute, must be defined inside Commands properties
      * @param project project in which the command will be executed
      */
-    execCommand(command: keyof Commands<string>, project: Project, options: ProcessingOptions): void
+    execCommand(command: keyof Commands<string>, project: IProject<ProjectFunctionType>, options: ProcessingOptions): void
 
     /**
      * Execute a command in several projects
@@ -142,7 +160,8 @@ export interface IProject<FunctionType> extends ProjectDefinition, Commands<Func
  * Processing options.
  */
 export interface ProcessingOptions {
-    projects?: string[],
-    stopOnError?: boolean,
-    branch?: string
+    projects: string[];
+    stopOnError?: boolean;
+    branch?: string;
+    command?: string[];
 }
