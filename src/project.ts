@@ -6,8 +6,9 @@ import { COMMON_COMMANDS,
     constants }             from '../src/constants';
 import { Commands,
     IProject,
+    OverwritableProps,
     ProcessingOptions,
-    ProjectDefinition, 
+    ProjectFields, 
     ProjectFunctionType }   from '../types/index';
 import logger               from './utils/logger';
 
@@ -24,8 +25,8 @@ export class Project implements IProject<ProjectFunctionType> {
     };
     commands: Commands<string> = COMMON_COMMANDS;
 
-    constructor(pd: ProjectDefinition, { cwd, user }: { cwd: string, user: string }){
-        this.name = pd.name;
+    constructor(name: string, pd: ProjectFields, { cwd, user }: OverwritableProps){
+        this.name = name;
         this.originUrl = pd.originUrl;
         this.branches = pd.branches;
         // Set default properties
@@ -34,7 +35,7 @@ export class Project implements IProject<ProjectFunctionType> {
         if (Object.keys(pd.commands || {}).length !== 0) this.commands = { ...COMMON_COMMANDS, ...pd.commands};
     }
 
-    announceCommand = (command: string) => {
+    announceCommand = (command: string): void => {
         console.log('');
         logger.info(`Project: ${this.name}`);
         console.log('');

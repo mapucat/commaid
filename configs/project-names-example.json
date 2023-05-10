@@ -1,20 +1,24 @@
 {
     "cwd": "/Users/user-name/Documents/code",
     "user": "general_user",
-    "runnableProjects": [
-        {
-            "name": "freeCodeCamp",
+    "commands": {
+
+    },
+    "runnableProjects": {
+        "freeCodeCamp": {
             "user": "specific_user",
             "originUrl": "git@github.com:freeCodeCamp/freeCodeCamp.git",
             "branches": {
                 "main": "main",
                 "dev": "develop"
+            },
+            "commands": {
+
             }
         }
-    ],
-    "noRunnableProjects": [
-        {
-            "name": "pm2",
+    },
+    "noRunnableProjects": {
+        "pm2": {
             "originUrl": "git@github.com:Unitech/pm2.git",
             "branches": {
                 "main": "master",
@@ -22,5 +26,5 @@
             },
             "cwd": "/Users/user-name/Documents/code2"
         }
-    ]
+    }
 }

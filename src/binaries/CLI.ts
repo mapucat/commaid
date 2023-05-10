@@ -32,13 +32,15 @@ const beginCommandProcessing = () => {
 
 /**
  * Get command's arguments
+ * @param commandFirstElement first command instruction, ex: git, npm, yarn
+ * @returns args for the command instruction
  */
-function getCommandArgs(isNpmCommand: boolean): string[] {
+function getCommandArgs(commandFirstElement: string): string[] {
     let argsIndex: number;
     let args = [];
     if ((argsIndex = program.rawArgs.indexOf('--')) >= 0) {
         args = program.rawArgs.slice(argsIndex + 1);
-        if (isNpmCommand) args.unshift('--');
+        if (commandFirstElement === 'npm') args.unshift('--');
     }
     return args;
   } 
@@ -69,12 +71,12 @@ program
     .action((options: ProcessingOptions) => {
         try {
             projectManager.executeCommandsForProjects(
-                'clone', projectManager.getProjectNames(options.projects), options);
+                'clone', options.projects, options);
         } catch (error) {
             logger.err(error);
             process.exit(constants.ERROR_EXIT);
         }
-    });
+    }).usage('[options]');
 
 program
     .command('install')
@@ -84,12 +86,12 @@ program
     .action((options: ProcessingOptions) => {
         try {
             projectManager.executeCommandsForProjects(
-                'install', projectManager.getProjectNames(options.projects), options);
+                'install', options.projects, options);
         } catch (error) {
             logger.err(error);
             process.exit(constants.ERROR_EXIT);
         }
-    });
+    }).usage('[options]');
 
 program
     .command('update')
@@ -100,12 +102,12 @@ program
     .action((branch: string, options: ProcessingOptions) => {
         try {
             projectManager.executeCommandsForProjects(
-                'update', projectManager.getProjectNames(options.projects), { ...options, branch });
+                'update', options.projects, { ...options, branch });
         } catch (error) {
             logger.err(error);
             process.exit(constants.ERROR_EXIT);
         }
-    });
+    }).usage('<branch> [options]');
 
 program
     .command('exec')
@@ -116,7 +118,7 @@ program
     .action((options: ProcessingOptions) => {
         try {
             projectManager.executeCommandsForProjects(
-                'exec', projectManager.getProjectNames(options.projects), { ...options, command: [ ...options.command, ...getCommandArgs(options.command[0] === 'npm') ] });
+                'exec', options.projects, { ...options, command: [ ...options.command, ...getCommandArgs(options.command[0]) ] });
         } catch (error) {
             logger.err(error);
             process.exit(constants.ERROR_EXIT);

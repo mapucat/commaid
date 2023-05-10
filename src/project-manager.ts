@@ -3,10 +3,13 @@ import { existsSync, readFileSync } from "fs";
 
 import { constants }                from "./constants";
 import { Commands,
+    IProject,
     IProjectManager,
+    OverwritableProps,
     ProcessingOptions,
-    ProjectDefinition,
-    ProjectManagerDefinition }      from "../types/index";
+    ProjectFields,
+    ProjectFunctionType,
+    ProjectManagerFields }      from "../types/index";
 import { Project }                  from "./project";
 import logger                       from "./utils/logger";
 
@@ -31,6 +34,13 @@ export default class ProjectManager implements IProjectManager {
         execSync(`mkdir -p ${constants.CONFIG_FOLDER}`, { stdio: 'inherit' });
     }
 
+    transformProjectList = (rawProjects: { [x: string]: ProjectFields }, props: OverwritableProps): { [x: string]: Project } => {
+        return Object.keys(rawProjects).reduce((accumulator: { [x: string]: Project }, currentValue: string) => ({
+            ...accumulator,
+            [currentValue]: new Project(currentValue, rawProjects[currentValue], props)
+        }), {})
+    }
+
     generateConfigFile = () => {
         this.generateConfigFolder();
         if (this.configFileExists()) {
@@ -42,26 +52,18 @@ export default class ProjectManager implements IProjectManager {
     }
 
     loadProjectsFromFile = (): void => {
-        // Create file if it does not exists
         if (!this.configFileExists()) {
             throw new Error(`No ${constants.CONFIG_FILE} found in ${constants.CONFIG_FOLDER}. Use \`commaid init\` to generate your own project's file.`);
         }
-        
         const data = readFileSync(constants.CONFIG_FILE_PATH).toString();
-        const { cwd, user, runnableProjects, noRunnableProjects }: ProjectManagerDefinition = JSON.parse(data) as ProjectManagerDefinition;
-
-        runnableProjects.forEach((projectJSON: ProjectDefinition) => {
-            this.runnableProjects[projectJSON.name] = new Project(projectJSON, { cwd, user });
-        });
-
-        noRunnableProjects.forEach((projectJSON: ProjectDefinition) => {
-            this.noRunnableProjects[projectJSON.name] = new Project(projectJSON, { cwd, user });
-        });
-
+        const { runnableProjects, noRunnableProjects, ...props } = JSON.parse(data) as ProjectManagerFields<ProjectFields>;
+        
+        this.runnableProjects = this.transformProjectList(runnableProjects, props);
+        this.noRunnableProjects = this.transformProjectList(noRunnableProjects, props);
         this.allProjects = { ...this.runnableProjects, ...this.noRunnableProjects };
     }
 
-    execCommand = (command: keyof Commands<string>, project: Project, options: ProcessingOptions): void => {
+    execCommand = <T extends IProject<ProjectFunctionType>>(command: keyof Commands<string>, project: T, options: ProcessingOptions): void => {
         if (command in project) {
             project[command](options);
         } else {
@@ -69,7 +71,8 @@ export default class ProjectManager implements IProjectManager {
         }
     }
     
-    executeCommandsForProjects = (command: keyof Commands<string>, projectNames: string[], options: ProcessingOptions): void => {
+    executeCommandsForProjects = (command: keyof Commands<string>, projectNamesTyped: string[], options: ProcessingOptions): void => {
+        const projectNames: string[] = this.getProjectNames(projectNamesTyped);
         for (const projectName of projectNames) {
             if (!(projectName in this.allProjects)) 
                 throw new Error(

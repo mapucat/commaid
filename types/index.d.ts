@@ -1,3 +1,13 @@
+import { Project } from "../src/project";
+
+
+///////////////////////////////////////////////////
+// 
+// General types
+// 
+///////////////////////////////////////////////////
+
+
 /**
  * Default executable accions in a project
  */
@@ -9,24 +19,77 @@ export interface Commands<T> {
 }
 
 /**
- * Project generic function's type
+ * Custom scripts defined by user
  */
-export type ProjectFunctionType = (...args: unknown[]) => void;
+export interface Scripts extends Commands<string> {
+    [x: string]: string;
+}
+
+/**
+ * Config's file overwritable properties
+ */
+export interface OverwritableProps {
+    /**
+     * Git user
+     * This value will be replaced on project's url
+     */
+    user?: string;
+
+    /**
+     * Project(s) location
+     */
+    cwd?: string;
+
+    /**
+     * Possible executable accions
+     */
+    commands?: Commands<string>;
+
+    /**
+     * Executable scripts
+     */
+    scripts?: Scripts;
+}
+
+/**
+ * Processing options
+ */
+export interface ProcessingOptions {
+    projects: string[];
+    stopOnError?: boolean;
+    branch?: string;
+    command?: string[];
+}
+
+///////////////////////////////////////////////////
+// 
+// Project Manager's types
+// 
+///////////////////////////////////////////////////
+
+/**
+ * Project Manager properties
+ */
+export interface ProjectManagerFields<T> extends OverwritableProps {
+    /**
+     * Runnable Projects's list
+     */
+    runnableProjects: { 
+        [x: string]: T;
+    };
+
+    /**
+     * No runnable Projects's list
+     */
+    noRunnableProjects: { 
+        [x: string]: T;
+    };
+}
 
 /**
  * Class used to manage projects
  */
-export interface IProjectManager {
-
-    /**
-     * List of runnable projects
-     */
-    runnableProjects: { [x: string]: ProjectFunctionType };
-
-    /**
-     * List of no runnable projects
-     */
-    noRunnableProjects: { [x: string]: ProjectFunctionType };
+export interface IProjectManager extends ProjectManagerFields<IProject<ProjectFunctionType>> {
 
     /**
      * List of runnable and no runnable projects
@@ -34,14 +97,21 @@ export interface IProjectManager {
     allProjects: { [x: string]: ProjectFunctionType };
 
     /**
+     * Get projects names given user's input
+     */
+    getProjectNames(projectNamesInput: string[]): string[];
+
+    /**
+     * Create a list of Project instances using the project list from config file
+     * @param rawProjects project list from config file
+     * @param props properties to be overwrited
+     */
+    transformProjectList(rawProjects: { [x: string]: ProjectFields }, props: OverwritableProps): { [x: string]: Project };
+
+    /**
      * Check config file existence
      */
     configFileExists(): boolean;
-
-    /**
-     * get projects names given user's input
-     */
-    getProjectNames(projectNamesInput: string[]): string[];
 
     /**
      * Generate commaid config folder
@@ -62,65 +132,46 @@ export interface IProjectManager {
      * Execute a command in a specific project
      * @param command command to execute, must be defined inside Commands properties
      * @param project project in which the command will be executed
+     * @param options additional options
      */
-    execCommand(command: keyof Commands<string>, project: IProject<ProjectFunctionType>, options: ProcessingOptions): void
+    execCommand<T extends IProject<ProjectFunctionType>>(command: keyof Commands<string>, project: T, options: ProcessingOptions): void
 
     /**
      * Execute a command in several projects
      * @param command ommand to execute, must be defined inside Commands properties
      * @param projectNames project's names in which the command will be executed
+     * @param options additional options
      */
     executeCommandsForProjects(command: keyof Commands<string>, projectNames: string[], options: ProcessingOptions): void
 }
 
+///////////////////////////////////////////////////
+// 
+// Project's types
+// 
+///////////////////////////////////////////////////
+
 /**
- * Project manager definition
+ * Project generic function's type
  */
-export interface ProjectManagerDefinition {
-    /**
-     * Projects's main location.
-     */
-    cwd: string;
-
-    /**
-     * General project's git user.
-     * This value will be replaced on project's url.
-     */
-    user: string;
-
-    /**
-     * Runnable Projects's list.
-     */
-    runnableProjects: IProject<unknown>[];
-
-    /**
-     * No runnable Projects's list.
-     */
-    noRunnableProjects: IProject<unknown>[];
-}
+export type ProjectFunctionType = (options: ProcessingOptions) => void;
 
 /**
  * Project properties
  */
-export interface ProjectDefinition {
+export interface ProjectFields extends OverwritableProps {
     /**
-     * Project's name.
+     * Project's name
      */
     name: string;
 
     /**
-     * Git project's url, could be the https or ssh url.
+     * Git project's url, could be the https or ssh url
      */
     originUrl: string;
 
     /**
-     * Specific project's git user.
-     * This value will be replaced on project's url.
-     */
-    user: string;
-
-    /**
-     * Project's branches.
+     * Project's branches
      */
     branches: {
         /**
@@ -132,36 +183,16 @@ export interface ProjectDefinition {
          */
         [x: string]: string;
     };
-
-    /**
-     * Specific project's location
-     */
-    cwd?: string;
-
-    /**
-     * Possible executable accions in a project
-     */
-    commands?: Commands<string>;
 }
 
 /**
- * Git project's information
+ * Project's methods
  */
-export interface IProject<FunctionType> extends ProjectDefinition, Commands<FunctionType> {
+export interface IProject<FunctionType> extends ProjectFields, Commands<FunctionType> {
 
     /**
-     * Print command and project's name on terminal.
-     * @param command command to be executed.
+     * Print command and project's name on terminal
+     * @param command command to be executed
      */
     announceCommand(command: string): void;
-}
-
-/**
- * Processing options.
- */
-export interface ProcessingOptions {
-    projects: string[];
-    stopOnError?: boolean;
-    branch?: string;
-    command?: string[];
 }
