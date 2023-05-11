@@ -21,7 +21,7 @@ export interface Commands<T> {
 /**
  * Custom scripts defined by user
  */
-export interface Scripts extends Commands<string> {
+export interface Scripts {
     [x: string]: string;
 }
 

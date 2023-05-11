@@ -1,9 +1,6 @@
 {
     "cwd": "/Users/user-name/Documents/code",
     "user": "general_user",
-    "commands": {
-
-    },
     "runnableProjects": {
         "freeCodeCamp": {
             "user": "specific_user",
@@ -11,9 +8,6 @@
             "branches": {
                 "main": "main",
                 "dev": "develop"
-            },
-            "commands": {
-
             }
         }
     },

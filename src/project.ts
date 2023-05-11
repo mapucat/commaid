@@ -9,7 +9,8 @@ import { Commands,
     OverwritableProps,
     ProcessingOptions,
     ProjectFields, 
-    ProjectFunctionType }   from '../types/index';
+    ProjectFunctionType, 
+    Scripts}   from '../types/index';
 import logger               from './utils/logger';
 
 /**
@@ -18,21 +19,24 @@ import logger               from './utils/logger';
 export class Project implements IProject<ProjectFunctionType> {
     name: string;
     originUrl: string;
-    cwd: string;
-    user: string;
     branches: {
         main: string;
     };
-    commands: Commands<string> = COMMON_COMMANDS;
 
-    constructor(name: string, pd: ProjectFields, { cwd, user }: OverwritableProps){
+    cwd = '';
+    user = '';
+    commands: Commands<string> = COMMON_COMMANDS;
+    scripts: Scripts = {};
+
+    constructor(name: string, pmProps: OverwritableProps, pf: ProjectFields){
         this.name = name;
-        this.originUrl = pd.originUrl;
-        this.branches = pd.branches;
-        // Set default properties
-        this.cwd = pd.cwd ? pd.cwd : cwd;
-        this.user = pd.user ? pd.user : user;
-        if (Object.keys(pd.commands || {}).length !== 0) this.commands = { ...COMMON_COMMANDS, ...pd.commands};
+        this.originUrl = pf.originUrl;
+        this.branches = pf.branches;
+        // Set properties
+        this.cwd = pf.cwd || pmProps.cwd;
+        this.user = pmProps.user || pmProps.user || '';
+        this.commands = { ...this.commands, ...pmProps.commands, ...pf.commands};
+        this.scripts = { ...pmProps.scripts, ...pf.scripts};
     }
 
     announceCommand = (command: string): void => {

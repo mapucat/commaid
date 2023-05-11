@@ -34,10 +34,10 @@ export default class ProjectManager implements IProjectManager {
         execSync(`mkdir -p ${constants.CONFIG_FOLDER}`, { stdio: 'inherit' });
     }
 
-    transformProjectList = (rawProjects: { [x: string]: ProjectFields }, props: OverwritableProps): { [x: string]: Project } => {
+    transformProjectList = (pmProps: OverwritableProps, rawProjects: { [x: string]: ProjectFields }): { [x: string]: Project } => {
         return Object.keys(rawProjects).reduce((accumulator: { [x: string]: Project }, currentValue: string) => ({
             ...accumulator,
-            [currentValue]: new Project(currentValue, rawProjects[currentValue], props)
+            [currentValue]: new Project(currentValue, pmProps, rawProjects[currentValue])
         }), {})
     }
 
@@ -56,11 +56,12 @@ export default class ProjectManager implements IProjectManager {
             throw new Error(`No ${constants.CONFIG_FILE} found in ${constants.CONFIG_FOLDER}. Use \`commaid init\` to generate your own project's file.`);
         }
         const data = readFileSync(constants.CONFIG_FILE_PATH).toString();
-        const { runnableProjects, noRunnableProjects, ...props } = JSON.parse(data) as ProjectManagerFields<ProjectFields>;
+        const { runnableProjects, noRunnableProjects, ...pmProps } = JSON.parse(data) as ProjectManagerFields<ProjectFields>;
         
-        this.runnableProjects = this.transformProjectList(runnableProjects, props);
-        this.noRunnableProjects = this.transformProjectList(noRunnableProjects, props);
+        this.runnableProjects = this.transformProjectList(pmProps, runnableProjects);
+        this.noRunnableProjects = this.transformProjectList(pmProps, noRunnableProjects);
         this.allProjects = { ...this.runnableProjects, ...this.noRunnableProjects };
+        console.log('======> ', this.allProjects)
     }
 
     execCommand = <T extends IProject<ProjectFunctionType>>(command: keyof Commands<string>, project: T, options: ProcessingOptions): void => {
