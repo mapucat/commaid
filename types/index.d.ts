@@ -72,16 +72,9 @@ export interface ProcessingOptions {
  */
 export interface ProjectManagerFields<T> extends OverwritableProps {
     /**
-     * Runnable Projects's list
+     * Project list
      */
-    runnableProjects: { 
-        [x: string]: T;
-    };
-
-    /**
-     * No runnable Projects's list
-     */
-    noRunnableProjects: { 
+    projects: { 
         [x: string]: T;
     };
 }
@@ -90,12 +83,6 @@ export interface ProjectManagerFields<T> extends OverwritableProps {
  * Class used to manage projects
  */
 export interface IProjectManager extends ProjectManagerFields<IProject<ProjectFunctionType>> {
-
-    /**
-     * List of runnable and no runnable projects
-     */
-    allProjects: { [x: string]: ProjectFunctionType };
-
     /**
      * Get projects names given user's input
      */
@@ -164,6 +151,11 @@ export interface ProjectFields extends OverwritableProps {
      * Project's name
      */
     name: string;
+
+    /**
+     * Represent whether or not project is capable of being executed
+     */
+    isRunnable?: boolean;
 
     /**
      * Git project's url, could be the https or ssh url

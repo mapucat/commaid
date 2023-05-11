@@ -57,7 +57,7 @@ Config file's name is `projects-config.json` by default.
 {
     "cwd": "/Users/user-name/Documents/code",
     "user": "general_user",
-    "runnableProjects": {
+    "projects": {
         "freeCodeCamp": {
             "user": "specific_user",
             "originUrl": "git@github.com:freeCodeCamp/freeCodeCamp.git",
@@ -65,10 +65,9 @@ Config file's name is `projects-config.json` by default.
                 "main": "main",
                 "dev": "develop"
             }
-        }
-    },
-    "noRunnableProjects": {
+        },
         "pm2": {
+            "runable": false,
             "cwd": "/Users/user-name/Documents/code2",
             "originUrl": "git@github.com:Unitech/pm2.git",
             "branches": {
@@ -83,19 +82,19 @@ Config file's name is `projects-config.json` by default.
 #### Attributes available
 
 **1. General:**
-| Field                 | Required | Type                         | Description                                                                      |
-| --------------------- | -------- | ---------------------------- | -------------------------------------------------------------------------------- |
-| `runnableProjects`*   | TRUE     | *Project <sup>2</sup>* array  | Could be empty, projects that will be executed.                                 |
-| `noRunnableProjects`* | TRUE     | *Project <sup>2</sup>* array  | Could be empty, projects that must not be executed.                             |
-| `cwd`                 | TRUE     | string                        | Projects main location.                                                         |
-| `user`                | FALSE    | string                        | General project's git user. <br/> This value will be replaced on project's url. |
-| `commands`*           | FALSE    | *Commands <sup>4</sup>*                        | Possible executable accions in a project.   |
-| `scripts`*            | FALSE    | *Scripts <sup>5</sup>*                        | Executable scripts.                         |
+| Field         | Required | Type                          | Description                                                                     |
+| ------------- | -------- | ----------------------------- | ------------------------------------------------------------------------------- |
+| `projects`*   | TRUE     | *Project <sup>2</sup>* array  | Could be empty, projects that will be executed.                                 |
+| `cwd`         | TRUE     | string                        | Projects main location.                                                         |
+| `user`        | FALSE    | string                        | General project's git user. <br/> This value will be replaced on project's url. |
+| `commands`*   | FALSE    | *Commands <sup>4</sup>*       | Possible executable accions in a project.                                       |
+| `scripts`*    | FALSE    | *Scripts <sup>5</sup>*        | Executable scripts.                                                             |
 
 **2. Project:**
 | Field         | Required | Type                   | Description                                                                       |
 | ------------- | -------- | ---------------------- | --------------------------------------------------------------------------------- |
 | `name`        | TRUE     | string                 | Project's name.                                                                   |
+| `isRunnable`  | FALSE    | boolean                | Represent whether or not project is capable of being executed, true by default.   |
 | `originUrl`   | TRUE     | string                 | Git project's url, could be the https or ssh url.                                 |
 | `branches`*   | FALSE    | string                 | Project's *branches <sup>3</sup>*.                                                |
 | `cwd`         | FALSE    | string                 | Specific project's location.                                                      |
@@ -143,7 +142,7 @@ commaid init
 
 ### `clone` projects
 
-Clone the projects defined on `runnableProjects` AND `noRunnableProjects` in `CONFIG_FILE`.
+Clone the projects defined on `projects` in `CONFIG_FILE`.
 The workind directory for these projects corresponds to the one defined on `cwd` in `CONFIG_FILE`.
 
 ```bash
@@ -181,7 +180,7 @@ commaid clone -p project1 project2 --stop-on-error
 
 ### `install` projects
 
-Install the projects defined on `runnableProjects` AND `noRunnableProjects` in `CONFIG_FILE`.
+Install the projects defined on `projects` in `CONFIG_FILE`.
 The workind directory for these projects corresponds to the one defined on `cwd` in `CONFIG_FILE`.
 
 ```bash
@@ -220,7 +219,7 @@ commaid install -p project1 project2 --stop-on-error
 
 ### `update` projects
 
-Update a branch into the projects defined on `runnableProjects` AND `noRunnableProjects` in `CONFIG_FILE`.
+Update a branch into the projects defined on `projects` in `CONFIG_FILE`.
 The workind directory for these projects corresponds to the one defined on `cwd` in `CONFIG_FILE`.
 
 ```bash
@@ -259,7 +258,7 @@ commaid update main -p project1 project2 --stop-on-error
 
 ### `exec command` on projects
 
-Exec a command into the projects defined on `runnableProjects` AND `noRunnableProjects` in `CONFIG_FILE`.
+Exec a command into the projects defined on defined on `projects` in `CONFIG_FILE`.
 The workind directory for these projects corresponds to the one defined on `cwd` in `CONFIG_FILE`.
 
 ```bash

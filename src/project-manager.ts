@@ -18,16 +18,14 @@ import logger                       from "./utils/logger";
  */
 export default class ProjectManager implements IProjectManager {
 
-    runnableProjects = {};
-    noRunnableProjects = {};
-    allProjects = {};
+    projects = {};
 
     configFileExists = () => {
         return existsSync(constants.CONFIG_FILE_PATH);
     }
 
     getProjectNames = (projectNamesTyped: string[]) => {
-        return projectNamesTyped?.length === 0 ? Object.keys(this.allProjects) : projectNamesTyped;
+        return projectNamesTyped?.length === 0 ? Object.keys(this.projects) : projectNamesTyped;
     }
 
     generateConfigFolder = () => {
@@ -56,12 +54,8 @@ export default class ProjectManager implements IProjectManager {
             throw new Error(`No ${constants.CONFIG_FILE} found in ${constants.CONFIG_FOLDER}. Use \`commaid init\` to generate your own project's file.`);
         }
         const data = readFileSync(constants.CONFIG_FILE_PATH).toString();
-        const { runnableProjects, noRunnableProjects, ...pmProps } = JSON.parse(data) as ProjectManagerFields<ProjectFields>;
-        
-        this.runnableProjects = this.transformProjectList(pmProps, runnableProjects);
-        this.noRunnableProjects = this.transformProjectList(pmProps, noRunnableProjects);
-        this.allProjects = { ...this.runnableProjects, ...this.noRunnableProjects };
-        console.log('======> ', this.allProjects)
+        const { projects, ...pmProps } = JSON.parse(data) as ProjectManagerFields<ProjectFields>;
+        this.projects = this.transformProjectList(pmProps, projects);
     }
 
     execCommand = <T extends IProject<ProjectFunctionType>>(command: keyof Commands<string>, project: T, options: ProcessingOptions): void => {
@@ -75,12 +69,12 @@ export default class ProjectManager implements IProjectManager {
     executeCommandsForProjects = (command: keyof Commands<string>, projectNamesTyped: string[], options: ProcessingOptions): void => {
         const projectNames: string[] = this.getProjectNames(projectNamesTyped);
         for (const projectName of projectNames) {
-            if (!(projectName in this.allProjects)) 
+            if (!(projectName in this.projects)) 
                 throw new Error(
                     `Project \`${projectName}\` is not specified in \`${constants.CONFIG_FILE_PATH}\` file.
         To solve this error, you may need to check the project's config and make sure that \`${projectName}\` project is correctly defined.`);
             try {
-                this.execCommand(command, this.allProjects[projectName], options);
+                this.execCommand(command, this.projects[projectName], options);
             } catch(error) {
                 if (options.stopOnError) throw error;
                 logger.err(error);
