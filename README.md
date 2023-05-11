@@ -57,22 +57,26 @@ Config file's name is `projects-config.json` by default.
 {
     "cwd": "/Users/user-name/Documents/code",
     "user": "general_user",
-    "runnableProjects": [
-        {
-            "name": "freeCodeCamp",
+    "runnableProjects": {
+        "freeCodeCamp": {
             "user": "specific_user",
             "originUrl": "git@github.com:freeCodeCamp/freeCodeCamp.git",
-            "baseBranch": "main"
+            "branches": {
+                "main": "main",
+                "dev": "develop"
+            }
         }
-    ],
-    "noRunnableProjects": [
-        {
-            "name": "pm2",
+    },
+    "noRunnableProjects": {
+        "pm2": {
+            "cwd": "/Users/user-name/Documents/code2",
             "originUrl": "git@github.com:Unitech/pm2.git",
-            "baseBranch": "master",
-            "cwd": "/Users/user-name/Documents/code2"
+            "branches": {
+                "main": "master",
+                "dev": "development"
+            }
         }
-    ]
+    }
 }
 ```
 
@@ -81,20 +85,23 @@ Config file's name is `projects-config.json` by default.
 **1. General:**
 | Field                 | Required | Type                         | Description                                                                      |
 | --------------------- | -------- | ---------------------------- | -------------------------------------------------------------------------------- |
-| `cwd`                 | TRUE     | string                       | Projects main location.                                                          |
-| `user`                | TRUE     | string                       | General project's git user. <br/> This value will be replaced on project's url.  |
 | `runnableProjects`*   | TRUE     | *Project <sup>2</sup>* array  | Could be empty, projects that will be executed.                                 |
 | `noRunnableProjects`* | TRUE     | *Project <sup>2</sup>* array  | Could be empty, projects that must not be executed.                             |
+| `cwd`                 | TRUE     | string                        | Projects main location.                                                         |
+| `user`                | FALSE    | string                        | General project's git user. <br/> This value will be replaced on project's url. |
+| `commands`*           | FALSE    | *Commands <sup>4</sup>*                        | Possible executable accions in a project.   |
+| `scripts`*            | FALSE    | *Scripts <sup>5</sup>*                        | Executable scripts.                         |
 
 **2. Project:**
-| Field         | Required | Type    | Description                                                                       |
-| ------------- | -------- | ------- | --------------------------------------------------------------------------------- |
-| `name`        | TRUE     | string  | Project's name.                                                                   |
-| `originUrl`   | TRUE     | string  | Git project's url, could be the https or ssh url.                                 |
-| `user`        | FALSE    | string  | Specific project's git user. <br/> This value will be replaced on project's url.  |
-| `branches`*   | FALSE    | string  | Project's *branches <sup>3</sup>*.                                                |
-| `cwd`         | FALSE    | string  | Specific project's location.                                                      |
-| `commands`    | FALSE    | string  | Possible executable accions in a project.                                         |
+| Field         | Required | Type                   | Description                                                                       |
+| ------------- | -------- | ---------------------- | --------------------------------------------------------------------------------- |
+| `name`        | TRUE     | string                 | Project's name.                                                                   |
+| `originUrl`   | TRUE     | string                 | Git project's url, could be the https or ssh url.                                 |
+| `branches`*   | FALSE    | string                 | Project's *branches <sup>3</sup>*.                                                |
+| `cwd`         | FALSE    | string                 | Specific project's location.                                                      |
+| `user`        | FALSE    | string                 | Specific project's git user. <br/> This value will be replaced on project's url.  |
+| `commands`    | FALSE    | string                 | Possible executable accions in a project.                                         |
+| `scripts`*    | FALSE    | *Scripts <sup>5</sup>* | Executable scripts.                                                               |
 
 **3. Branches:**
 
@@ -111,6 +118,14 @@ Config file's name is `projects-config.json` by default.
 | `clone`                | FALSE    | string  | Project's name.                                   |
 | `install`              | FALSE    | string  | Git project's url, could be the https or ssh url. |
 | `update`               | FALSE    | string  | Project's base branch.                            |
+
+**5. Scripts:**
+
+- Important: All projects defined should keep the same scripts structure.
+
+| Field                  | Required | Type    | Description                                                                |
+| ---------------------- | -------- | ------- | -------------------------------------------------------------------------- |
+| `x`                    | FALSE    | string  | Executable script. <br/> You could define the number of branches you want. |
 
 ---
 

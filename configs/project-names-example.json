@@ -13,12 +13,12 @@
     },
     "noRunnableProjects": {
         "pm2": {
+            "cwd": "/Users/user-name/Documents/code2",
             "originUrl": "git@github.com:Unitech/pm2.git",
             "branches": {
                 "main": "master",
                 "dev": "development"
-            },
-            "cwd": "/Users/user-name/Documents/code2"
+            }
         }
     }
 }

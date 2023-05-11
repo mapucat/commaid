@@ -67,8 +67,9 @@ export class Project implements IProject<ProjectFunctionType> {
     }
 
     exec({ command }: ProcessingOptions) {
-        const commandToExec = command.join(' ');
+        const commandToExec = command[0] in this.scripts ? this.scripts[command[0]] : command.join(' '); 
         this.announceCommand(commandToExec);
+        if (!(command[0] in this.scripts)) logger.warn(`Script \`${command[0]}\` not found in \`${this.name}\` definition. If you are trying to use a script, add it in \`scripts\` property into ${constants.CONFIG_FILE_PATH}.`);
         execSync(commandToExec, { cwd: path.join(this.cwd, this.name), stdio: 'inherit' });
     }
 }
