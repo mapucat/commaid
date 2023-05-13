@@ -8,6 +8,7 @@ import { Commands } from '../types';
  */
 const CONFIG_FOLDER = path.join(process.env.HOME, '.commaid');
 const CONFIG_FILE = 'projects-config.json';
+const CONFIG_EXAMPLE = 'examples/project-names-example.json';
 
 /**
  * Constants variables used by Commaid
@@ -24,7 +25,8 @@ export const constants = {
 
     CONFIG_FOLDER: CONFIG_FOLDER,
     CONFIG_FILE: CONFIG_FILE,
-    CONFIG_FILE_PATH: path.join(CONFIG_FOLDER, CONFIG_FILE)
+    CONFIG_FILE_PATH: path.join(CONFIG_FOLDER, CONFIG_FILE),
+    CONFIG_EXAMPLE: path.join(__dirname, CONFIG_EXAMPLE)
 };
 
 /**

@@ -10,6 +10,7 @@
   },
   "include": [
     "src/**/*.ts",
+    "src/examples/project-names-example.json",
     "src/schemas/branches.json",
     "src/schemas/commands.json",
     "src/schemas/pm.json",

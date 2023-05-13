@@ -29,7 +29,7 @@ export default class ProjectManager implements IProjectManager {
     }
 
     generateConfigFolder = () => {
-        execSync(`mkdir -p ${constants.CONFIG_FOLDER}`, { stdio: 'inherit' });
+        execSync(`mkdir ${constants.CONFIG_FOLDER}`, { stdio: 'inherit' });
     }
 
     transformProjectList = (pmProps: OverwritableProps, jsonProjects: { [x: string]: ProjectFields }): { [x: string]: Project } => {
@@ -45,7 +45,7 @@ export default class ProjectManager implements IProjectManager {
         if (this.configFileExists()) {
             throw new Error(`Config file can not be generated, ${constants.CONFIG_FILE} have been found in ${constants.CONFIG_FOLDER}.`);
         } else {
-            execSync(`cp ./configs/project-names-example.json ${constants.CONFIG_FILE_PATH}`, { stdio: 'inherit' });
+            execSync(`cp ${constants.CONFIG_EXAMPLE} ${constants.CONFIG_FILE_PATH}`, { stdio: 'inherit' });
             logger.info(`Config file ${constants.CONFIG_FILE} have been created in ${constants.CONFIG_FOLDER}. Update the file with your own values.`);
         }
     }

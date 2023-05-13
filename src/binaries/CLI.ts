@@ -14,8 +14,10 @@ program.version(version)
     .usage('<command> [options] [projects...]')
     .addHelpText('afterAll', HELP_TEXT.afterAll)
     .showHelpAfterError()
-    .hook('preAction', () => {
-        projectManager.loadDataFromFile();
+    .hook('preAction', ({ args }) => {
+        if (!args.includes('init')) {
+            projectManager.loadDataFromFile();
+        }
     });
 
 /**
