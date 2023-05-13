@@ -23,7 +23,7 @@ Manage several projects simultaneously in one place
 
 **Important:**
 
-This project includes code adapted from PM2 by Strzelewicz Alexandre, available at [PM2]<https://www.npmjs.com/package/pm2>, licensed under the GNU AGPL 3.0 license.
+This project includes code adapted from PM2 by Strzelewicz Alexandre, available at [PM2](https://www.npmjs.com/package/pm2), licensed under the GNU AGPL 3.0 license.
 
 ## Requirements
 
@@ -145,10 +145,11 @@ Clone the projects defined on `projects` in `CONFIG_FILE`.
 The workind directory for these projects corresponds to the one defined on `cwd` in `CONFIG_FILE`.
 
 ```bash
-commaid clone [<projectName1> <projectName2> <projectNameN> ...] [options]
+commaid clone [options]
 
 Options
-    -s --stop-on-error  stop process on clone error
+    -s --stop-on-error           Stop process on installation error
+    -p --projects [projects...]  List of projects to be affected (default: all)
 ```
 
 - Clone ALL projects.
@@ -183,11 +184,11 @@ Install the projects defined on `projects` in `CONFIG_FILE`.
 The workind directory for these projects corresponds to the one defined on `cwd` in `CONFIG_FILE`.
 
 ```bash
-commaid install [<projectName1> <projectName2> <projectNameN> ...] [options]
+commaid install [options]
 
 Options
-    -s --stop-on-error  stop process on installation error
-    -p --projects [projects...]', 'List of projects to be affected (default: all)
+    -s --stop-on-error           Stop process on installation error
+    -p --projects [projects...]  List of projects to be affected (default: all)
 ```
 
 - Install ALL projects.
@@ -222,11 +223,11 @@ Update a branch into the projects defined on `projects` in `CONFIG_FILE`.
 The workind directory for these projects corresponds to the one defined on `cwd` in `CONFIG_FILE`.
 
 ```bash
-commaid update [options] <branch> [projectNames...]
+commaid update <branch> [options]
 
 Options
-    -s --stop-on-error  stop process on installation error
-    -p --projects [projects...]', 'List of projects to be affected (default: all)
+    -s --stop-on-error           Stop process on installation error
+    -p --projects [projects...]  List of projects to be affected (default: all)
 ```
 
 - Update ALL projects.
@@ -264,8 +265,8 @@ The workind directory for these projects corresponds to the one defined on `cwd`
 commaid exec [options] -c <command> [-- <args>]
 
 Options
-    -s --stop-on-error  stop process on installation error
-    -p --projects [projects...]', 'List of projects to be affected (default: all)
+    -s --stop-on-error           Stop process on installation error
+    -p --projects [projects...]  List of projects to be affected (default: all)
 ```
 
 - Exec a command on ALL projects.
