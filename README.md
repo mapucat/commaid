@@ -93,8 +93,8 @@ Config file's name is `projects-config.json` by default.
 **2. Project:**
 | Field         | Required | Type                   | Description                                                                       |
 | ------------- | -------- | ---------------------- | --------------------------------------------------------------------------------- |
-| `isRunnable`  | FALSE    | boolean                | Represent whether or not project is capable of being executed, *true by default*.   |
-| `originUrl`   | TRUE     | string                 | Git project's url, could be the https or ssh url.                                 |
+| `isRunnable`  | FALSE    | boolean                | Represent whether or not project is capable of being executed, *true by default*. |
+| `originUrl`   | TRUE     | string                 | Git project's url, could be the https or ssh url. <br/> This value could use `<user>` key to replace with the user defined dynamically.          |
 | `branches`*   | TRUE     | string                 | Project's *branches <sup>3</sup>*.                                                |
 | `cwd`         | FALSE    | string                 | Specific project's location.                                                      |
 | `user`        | FALSE    | string                 | Specific project's git user. <br/> This value will be replaced on project's url.  |

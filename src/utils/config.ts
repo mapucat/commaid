@@ -32,8 +32,8 @@ export class Config {
      */
     
     _errMsgs = {
-        'require': '"%s" is required.',
-        'type'   : 'Expect "%s" to be a typeof %s, but now is %s.',
+        'require': '"%s%s" is required.',
+        'type'   : 'Expect "%s%s" to be a typeof %s, but now is %s.',
     }
     
     /**
@@ -64,17 +64,17 @@ export class Config {
         // clone config
         const conf = Object.assign({}, json);
         this._errors = [];
-        // Verify project manager data
         const { branchesSch, commandsSch, pmSch, projectSch } = this.schemas;
+        // Verify project manager data
         const res = this.validateSchema(pmSch, conf);
         res['commands'] = conf['commands'] && this.validateSchema(commandsSch, conf['commands']);
         // Verify project data
         const projects = {};
         for (const name in conf['projects']) {
-            const projectJSON = conf['projects'][name]
-            projects[name] = this.validateSchema(projectSch, projectJSON);
-            projects[name]['branches'] = projectJSON['branches'] && this.validateSchema(branchesSch, projectJSON['branches']);
-            projects[name]['commands'] = projectJSON['commands'] && this.validateSchema(commandsSch, projectJSON['command']);
+            const projectJSON = conf['projects'][name];
+            projects[name] = this.validateSchema(projectSch, projectJSON, `${name}.`);
+            projects[name]['branches'] = projectJSON['branches'] && this.validateSchema(branchesSch, projectJSON['branches'],  `${name}.branches.`);
+            projects[name]['commands'] = projectJSON['commands'] && this.validateSchema(commandsSch, projectJSON['command'],  `${name}.command.`);
         }
         res['projects'] = projects;
         return { errors: this._errors, config: res as ProjectManagerFields<ProjectFields> };
@@ -86,9 +86,9 @@ export class Config {
      * @param conf compared value
      * @returns validated and processed configuration
      */
-    validateSchema(sch: SchemaProp, conf: unknown): unknown {
+    validateSchema(sch: SchemaProp, conf: unknown, parent = ''): unknown {
         for (const key in sch) {
-            this.validateProp(sch[key], key, conf);
+            this.validateProp(sch[key], key, conf, parent);
         }
         return conf;
     }
@@ -101,13 +101,14 @@ export class Config {
      * @param conf compared value
      * @returns {unknown} property's value
      */
-    validateProp(schAttr: SchType, key: string, conf: unknown): unknown {
+    validateProp(schAttr: SchType, key: string, conf: unknown, parent = ''): unknown {
         const sch = Object.assign({}, schAttr);
         delete sch.default;
         for (const prop in sch) {
             if(!this.hasError(
                 Validator.isValid(prop, sch[prop], conf[key]),
                 this._errMsgs[prop], 
+                parent,
                 key,
                 sch[prop],
                 typeof conf[key]

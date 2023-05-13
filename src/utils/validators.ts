@@ -12,7 +12,8 @@ export class Validator {
      * @returns {boolean} if value meets the requirement
      */
     require = (value: unknown, require: boolean): boolean => {
-        return require && !!value || value === 0;
+        const existValue = value !== null && value !== undefined && (!this.object(value) || Object.keys(value).length > 0)
+        return require && existValue;
     }
 
     /**
@@ -59,7 +60,7 @@ export class Validator {
      * @returns if value is an object
      */
     object = (value: unknown): boolean => {
-        return !value ||!Array.isArray(value) && typeof value === 'object';
+        return !value || !Array.isArray(value) && typeof value === 'object';
     }
 
     /**

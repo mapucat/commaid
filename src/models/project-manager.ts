@@ -57,12 +57,11 @@ export default class ProjectManager implements IProjectManager {
         const data = readFileSync(constants.CONFIG_FILE_PATH).toString();
         const { errors, config } = Config.validateJSON(JSON.parse(data));
         if (errors && errors.length > 0){
-            logger.err(`Validation Error: The provided ${constants.CONFIG_FILE} does not match the required schema.
+            throw new Error(`Validation Error: The provided ${constants.CONFIG_FILE} does not match the required schema.
     Next errors found:
         * ${errors.join(`
-        *`)}`);
-            logger.printOut('');
-            throw new Error(`Please review README.md for futher information.`);
+        * `)}
+    Please review README.md file for futher information.`);
         }
         const { projects, ...pmProps } = config;
         this.projects = this.transformProjectList(pmProps, projects);

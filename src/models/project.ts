@@ -40,10 +40,10 @@ export class Project implements IProject<ProjectFunctionType> {
     }
 
     announceCommand = (command: string): void => {
-        console.log('');
+        logger.printOut('');
         logger.info(`Project: ${this.name}`);
-        console.log('');
-        console.log(`> ${command}\n`);
+        logger.printOut('');
+        logger.printOut(`> ${command}\n`);
     }
 
     clone = () => {
