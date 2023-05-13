@@ -3,15 +3,15 @@ import { existsSync }       from 'fs';
 import path                 from 'path';
 
 import { COMMON_COMMANDS,
-    constants }             from '../src/constants';
+    constants }             from '../constants';
 import { Commands,
     IProject,
     OverwritableProps,
     ProcessingOptions,
     ProjectFields, 
     ProjectFunctionType, 
-    Scripts}   from '../types/index';
-import logger               from './utils/logger';
+    Scripts }               from '../../types/index';
+import logger               from '../utils/logger';
 
 /**
  * @typedef { import("./types").IProject } IProject

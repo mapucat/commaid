@@ -1,4 +1,4 @@
-import { Project } from "../src/project";
+import { Project } from "../src/models/project";
 
 
 ///////////////////////////////////////////////////
@@ -84,6 +84,12 @@ export interface ProjectManagerFields<T> extends OverwritableProps {
  */
 export interface IProjectManager extends ProjectManagerFields<IProject<ProjectFunctionType>> {
     /**
+     * Verify if ProjectManager JSON is valid and return value
+     * @param data JSON to validate
+     */
+    // parseJSON(data: string): ProjectManagerFields<ProjectFields>;
+
+    /**
      * Get projects names given user's input
      */
     getProjectNames(projectNamesInput: string[]): string[];
@@ -113,7 +119,7 @@ export interface IProjectManager extends ProjectManagerFields<IProject<ProjectFu
     /**
      * Load configuration defined in config file
      */
-    loadProjectsFromFile(): void
+    loadDataFromFile(): void
 
     /**
      * Execute a command in a specific project
@@ -188,3 +194,32 @@ export interface IProject<FunctionType> extends ProjectFields, Commands<Function
      */
     announceCommand(command: string): void;
 }
+
+///////////////////////////////////////////////////
+// 
+// Schema 
+// 
+///////////////////////////////////////////////////
+
+/**
+ * Schema's properties, defines whether a config property 
+ * is required and its data type.
+ */
+export interface SchType {
+    require: boolean,
+    type: string,
+    default?: unknown
+}
+
+/**
+ * Schemas availables, each one corresponds to a attribute 
+ * definition for config file.
+ */
+export interface Schemas {
+    pmSch: SchemaProp,
+    projectSch: SchemaProp,
+    commandsSch: SchemaProp,
+    branchesSch: SchemaProp
+}
+
+export type SchemaProp = { [ x:string ]: SchType };

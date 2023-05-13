@@ -1,0 +1,11 @@
+{
+    "clone": {
+        "type": "string"
+    },
+    "install": {
+        "type": "string"
+    },
+    "update": {
+        "type": "string"
+    }
+}

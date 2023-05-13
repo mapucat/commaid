@@ -1,17 +1,17 @@
 import { execSync }                 from "child_process";
 import { existsSync, readFileSync } from "fs";
 
-import { constants }                from "./constants";
+import { constants }                from "../constants";
 import { Commands,
     IProject,
     IProjectManager,
     OverwritableProps,
     ProcessingOptions,
     ProjectFields,
-    ProjectFunctionType,
-    ProjectManagerFields }      from "../types/index";
+    ProjectFunctionType }           from "../../types/index";
 import { Project }                  from "./project";
-import logger                       from "./utils/logger";
+import logger                       from "../utils/logger";
+import Config                       from "../utils/config";
 
 /**
  * @typedef { import("./types").IProjectManager } IProjectManager
@@ -32,11 +32,12 @@ export default class ProjectManager implements IProjectManager {
         execSync(`mkdir -p ${constants.CONFIG_FOLDER}`, { stdio: 'inherit' });
     }
 
-    transformProjectList = (pmProps: OverwritableProps, rawProjects: { [x: string]: ProjectFields }): { [x: string]: Project } => {
-        return Object.keys(rawProjects).reduce((accumulator: { [x: string]: Project }, currentValue: string) => ({
-            ...accumulator,
-            [currentValue]: new Project(currentValue, pmProps, rawProjects[currentValue])
-        }), {})
+    transformProjectList = (pmProps: OverwritableProps, jsonProjects: { [x: string]: ProjectFields }): { [x: string]: Project } => {
+        const projects = {};
+        for (const key in jsonProjects) {
+            projects[key] = new Project(key, pmProps, jsonProjects[key]);
+        }
+        return projects;
     }
 
     generateConfigFile = () => {
@@ -49,12 +50,21 @@ export default class ProjectManager implements IProjectManager {
         }
     }
 
-    loadProjectsFromFile = (): void => {
+    loadDataFromFile = (): void => {
         if (!this.configFileExists()) {
             throw new Error(`No ${constants.CONFIG_FILE} found in ${constants.CONFIG_FOLDER}. Use \`commaid init\` to generate your own project's file.`);
         }
         const data = readFileSync(constants.CONFIG_FILE_PATH).toString();
-        const { projects, ...pmProps } = JSON.parse(data) as ProjectManagerFields<ProjectFields>;
+        const { errors, config } = Config.validateJSON(JSON.parse(data));
+        if (errors && errors.length > 0){
+            logger.err(`Validation Error: The provided ${constants.CONFIG_FILE} does not match the required schema.
+    Next errors found:
+        * ${errors.join(`
+        *`)}`);
+            logger.printOut('');
+            throw new Error(`Please review README.md for futher information.`);
+        }
+        const { projects, ...pmProps } = config;
         this.projects = this.transformProjectList(pmProps, projects);
     }
 
@@ -68,13 +78,13 @@ export default class ProjectManager implements IProjectManager {
     
     executeCommandsForProjects = (command: keyof Commands<string>, projectNamesTyped: string[], options: ProcessingOptions): void => {
         const projectNames: string[] = this.getProjectNames(projectNamesTyped);
-        for (const projectName of projectNames) {
-            if (!(projectName in this.projects)) 
+        for (const name of projectNames) {
+            if (!(name in this.projects)) 
                 throw new Error(
-                    `Project \`${projectName}\` is not specified in \`${constants.CONFIG_FILE_PATH}\` file.
-        To solve this error, you may need to check the project's config and make sure that \`${projectName}\` project is correctly defined.`);
+                    `Project \`${name}\` is not specified in \`${constants.CONFIG_FILE_PATH}\` file.
+    To solve this error, you may need to check the project's config and make sure that \`${name}\` project is correctly defined.`);
             try {
-                this.execCommand(command, this.projects[projectName], options);
+                this.execCommand(command, this.projects[name], options);
             } catch(error) {
                 if (options.stopOnError) throw error;
                 logger.err(error);

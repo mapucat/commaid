@@ -1,0 +1,6 @@
+{
+    "main": {
+        "require": true,
+        "type": "string"
+    }
+}

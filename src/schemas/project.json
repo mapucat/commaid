@@ -1,0 +1,26 @@
+{
+    "isRunnable": {
+        "default": true,
+        "type": "boolean"
+    },
+    "originUrl": {
+        "require": true,
+        "type": "string"
+    },
+    "branches": {
+        "require": true,
+        "type": "object"
+    },
+    "cwd": {
+        "type": "string"
+    },
+    "user": {
+        "type": "string"
+    },
+    "commands": {
+        "type": "object"
+    },
+    "scripts": {
+        "type": "object"
+    }
+}

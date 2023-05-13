@@ -45,13 +45,13 @@ npm install -g commaid
 
 Config folder is defined as `~/.commaid` by default.
 
-**Note:** This value could be updated modifying `CONFIG_FOLDER` constants inside `src/constants.ts`.
+**Note:** Config folder path could be changed by modifying `CONFIG_FOLDER` constants inside `src/constants.ts`.
 
 ### Project's config file
 
 Config file's name is `projects-config.json` by default.
 
-**Note:** This value could be updated modifying `CONFIG_FILE` constants inside `src/constants.ts`.
+**Note:** Config file name could be changed by modifying `CONFIG_FILE` constants inside `src/constants.ts`.
 
 ```json
 {
@@ -67,7 +67,7 @@ Config file's name is `projects-config.json` by default.
             }
         },
         "pm2": {
-            "runable": false,
+            "isRunnable": false,
             "cwd": "/Users/user-name/Documents/code2",
             "originUrl": "git@github.com:Unitech/pm2.git",
             "branches": {
@@ -84,7 +84,7 @@ Config file's name is `projects-config.json` by default.
 **1. General:**
 | Field         | Required | Type                          | Description                                                                     |
 | ------------- | -------- | ----------------------------- | ------------------------------------------------------------------------------- |
-| `projects`*   | TRUE     | *Project <sup>2</sup>* array  | Could be empty, projects that will be executed.                                 |
+| `projects`*   | TRUE     | *Project <sup>2</sup>* array  | Could be empty, projects to work with.                                          |
 | `cwd`         | TRUE     | string                        | Projects main location.                                                         |
 | `user`        | FALSE    | string                        | General project's git user. <br/> This value will be replaced on project's url. |
 | `commands`*   | FALSE    | *Commands <sup>4</sup>*       | Possible executable accions in a project.                                       |
@@ -93,16 +93,30 @@ Config file's name is `projects-config.json` by default.
 **2. Project:**
 | Field         | Required | Type                   | Description                                                                       |
 | ------------- | -------- | ---------------------- | --------------------------------------------------------------------------------- |
-| `name`        | TRUE     | string                 | Project's name.                                                                   |
-| `isRunnable`  | FALSE    | boolean                | Represent whether or not project is capable of being executed, true by default.   |
+| `isRunnable`  | FALSE    | boolean                | Represent whether or not project is capable of being executed, *true by default*.   |
 | `originUrl`   | TRUE     | string                 | Git project's url, could be the https or ssh url.                                 |
-| `branches`*   | FALSE    | string                 | Project's *branches <sup>3</sup>*.                                                |
+| `branches`*   | TRUE     | string                 | Project's *branches <sup>3</sup>*.                                                |
 | `cwd`         | FALSE    | string                 | Specific project's location.                                                      |
 | `user`        | FALSE    | string                 | Specific project's git user. <br/> This value will be replaced on project's url.  |
 | `commands`    | FALSE    | string                 | Possible executable accions in a project.                                         |
 | `scripts`*    | FALSE    | *Scripts <sup>5</sup>* | Executable scripts.                                                               |
 
-**3. Branches:**
+**3. Commands:**
+| Field                  | Required | Type    | Description                                       |
+| ---------------------- | -------- | ------- | ------------------------------------------------- |
+| `clone`                | FALSE    | string  | Project's name.                                   |
+| `install`              | FALSE    | string  | Git project's url, could be the https or ssh url. |
+| `update`               | FALSE    | string  | Project's base branch.                            |
+
+**4. Scripts:**
+
+- Important: All projects defined should keep the same scripts structure.
+
+| Field                  | Required | Type    | Description                                                                |
+| ---------------------- | -------- | ------- | -------------------------------------------------------------------------- |
+| `x`                    | FALSE    | string  | Executable script. <br/> You could define the number of branches you want. |
+
+**5. Branches:**
 
 - Important: All projects defined should keep the same branch structure.
 
@@ -110,21 +124,6 @@ Config file's name is `projects-config.json` by default.
 | ---------------------- | -------- | ------- | ----------------------------------------------------------------------- |
 | `main`                 | TRUE     | string  | Base project's branch.                                                  |
 | `x`                    | FALSE    | string  | Other branches. <br/> You could define the number of branches you want. |
-
-**4. Commands:**
-| Field                  | Required | Type    | Description                                       |
-| ---------------------- | -------- | ------- | ------------------------------------------------- |
-| `clone`                | FALSE    | string  | Project's name.                                   |
-| `install`              | FALSE    | string  | Git project's url, could be the https or ssh url. |
-| `update`               | FALSE    | string  | Project's base branch.                            |
-
-**5. Scripts:**
-
-- Important: All projects defined should keep the same scripts structure.
-
-| Field                  | Required | Type    | Description                                                                |
-| ---------------------- | -------- | ------- | -------------------------------------------------------------------------- |
-| `x`                    | FALSE    | string  | Executable script. <br/> You could define the number of branches you want. |
 
 ---
 

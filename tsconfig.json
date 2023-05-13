@@ -8,6 +8,13 @@
     "outDir": "./lib",
     "resolveJsonModule": true
   },
+  "include": [
+    "src/**/*.ts",
+    "src/schemas/branches.json",
+    "src/schemas/commands.json",
+    "src/schemas/pm.json",
+    "src/schemas/project.json"
+  ],
   "exclude": [
     "node_modules",
     "./lib/**/*",

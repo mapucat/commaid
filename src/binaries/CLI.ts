@@ -1,9 +1,9 @@
 'use strict';
 
 import { constants, HELP_TEXT }     from '../constants';
-import ProjectManager               from '../project-manager';
+import ProjectManager               from '../models/project-manager';
 import logger                       from '../utils/logger';
-import { CommandWithRawArgs }       from '../utils/commander';
+import { CommandWithRawArgs }       from '../models/commander';
 import { ProcessingOptions }        from '../../types';
 import { version }                  from '../../package.json';
 
@@ -15,7 +15,7 @@ program.version(version)
     .addHelpText('afterAll', HELP_TEXT.afterAll)
     .showHelpAfterError()
     .hook('preAction', () => {
-        projectManager.loadProjectsFromFile();
+        projectManager.loadDataFromFile();
     });
 
 /**

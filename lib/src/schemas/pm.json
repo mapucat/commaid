@@ -1,0 +1,19 @@
+{
+    "projects": {
+        "require": true,
+        "type": "object"
+    },
+    "cwd": {
+        "require": true,
+        "type": "string"
+    },
+    "user": {
+        "type": "string"
+    },
+    "commands": {
+        "type": "object"
+    },
+    "scripts": {
+        "type": "object"
+    }
+}
