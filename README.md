@@ -14,7 +14,7 @@
 ```
 
 <div align="center">
-    <img alt="GitHub package.json version (branch)" src="https://img.shields.io/github/package-json/v/mapuroglob/commaid/develop">
+    <img alt="GitHub package.json version (branch)" src="https://img.shields.io/github/package-json/v/mapuroglob/commaid/main">
 </div>
 
 # Commaid
