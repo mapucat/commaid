@@ -1,7 +1,7 @@
 {
-    "name": "commaid",
+    "name": "commaid2",
     "preferGlobal": true,
-    "version": "0.6.0",
+    "version": "0.6.4",
     "engines": {
         "node": ">=14.21.3"
     },

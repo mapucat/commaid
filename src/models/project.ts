@@ -14,7 +14,7 @@ import { Commands,
 import logger               from '../utils/logger';
 
 /**
- * @typedef { import("./types").IProject } IProject
+ * @typedef { import("../types").IProject } IProject
  */
 export class Project implements IProject<ProjectFunctionType> {
     name: string;
@@ -25,8 +25,8 @@ export class Project implements IProject<ProjectFunctionType> {
 
     cwd = '';
     user = '';
-    commands: Commands<string> = COMMON_COMMANDS;
-    scripts: Scripts = {};
+    commands: Commands<string>;
+    scripts: Scripts;
 
     constructor(name: string, pmProps: OverwritableProps, pf: ProjectFields){
         this.name = name;
@@ -35,8 +35,21 @@ export class Project implements IProject<ProjectFunctionType> {
         // Set properties
         this.cwd = pf.cwd || pmProps.cwd;
         this.user = pmProps.user || pmProps.user || '';
-        this.commands = { ...this.commands, ...pmProps.commands, ...pf.commands};
-        this.scripts = { ...pmProps.scripts, ...pf.scripts};
+        this.commands = {
+            clone: pmProps.commands?.clone ||  pf.commands?.clone || COMMON_COMMANDS.clone,
+            install: pmProps.commands?.install ||  pf.commands?.install || COMMON_COMMANDS.install,
+            update: pmProps.commands?.update ||  pf.commands?.update || COMMON_COMMANDS.update,
+            exec: ''
+        };
+        this.setScripts(pmProps.scripts, pf.scripts);
+    }
+
+    private setScripts(opt1: Scripts = {}, opt2: Scripts = {}) {
+        this.scripts = {};
+        const props = Object.keys(opt1).concat(Object.keys(opt2));
+        [...new Set(props)].forEach((prop: string) => {
+            this.scripts[prop] = opt1[prop] || opt2[prop];
+        });
     }
 
     announceCommand = (command: string): void => {

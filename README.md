@@ -41,13 +41,13 @@ npm install -g commaid
 
 ## Configurations
 
-### Project's config folder
+### Config folder
 
 Config folder is defined as `~/.commaid` by default.
 
 **Note:** Config folder path could be changed by modifying `CONFIG_FOLDER` constants inside `src/constants.ts`.
 
-### Project's config file
+### Config file
 
 Config file's name is `projects-config.json` by default.
 
@@ -55,9 +55,11 @@ Config file's name is `projects-config.json` by default.
 
 ```json
 {
+    // General section
     "cwd": "/Users/user-name/Documents/code",
     "user": "general_user",
     "projects": {
+        // Each project section
         "freeCodeCamp": {
             "user": "specific_user",
             "originUrl": "git@github.com:freeCodeCamp/freeCodeCamp.git",
@@ -73,6 +75,158 @@ Config file's name is `projects-config.json` by default.
             "branches": {
                 "main": "master",
                 "dev": "development"
+            }
+        }
+    }
+}
+```
+
+#### Overwrite `COMMANDS`
+
+This project defines the next COMMON COMMANDS
+
+```js
+export const COMMON_COMMANDS = {
+    clone: 'git clone <url>',
+    install: 'npm install',
+    update: 'git checkout <branch> && git pull origin <branch>',
+    exec: ''
+};
+```
+
+This commands could be overwrite using the [Config file](#config-file).
+
+CONSIDERATIONS:
+`CLONE COMMAND`: It uses `<url>` key word to reference project originURL.
+`INSTALL COMMAND`: It uses `<url>` key word to reference project originURL.
+`UPDATE COMMAND`: It uses `<branch>` key word to reference project branches properties.
+`EXEC COMMAND`: You won't be able to modify `exec` behaviour.
+
+**TO ALL PROJECTS** Define `commands` property in the general section of the [Config file](#config-file).
+You can define each command separately or together.
+
+Example 1.
+
+```json
+{
+    "cwd": "/Users/user-name/Documents/code",
+    "user": "general_user",
+    "commands": {
+        "clone": "git clone <url> --no-hardlinks"
+    },
+    "projects": {
+        ...
+    }
+}
+```
+
+Example 2.
+
+```json
+{
+    "cwd": "/Users/user-name/Documents/code",
+    "user": "general_user",
+    "commands": {
+        "clone": "git clone <url> --no-hardlinks",
+        "install": "git install --force",
+        "update": "git checkout <branch> && git prune && git pull origin <branch>"
+    },
+    "projects": {
+        ...
+    }
+}
+```
+
+**TO EACH PROJECT** Define `commands` property in each project section of your [Config file](#config-file).
+You can define each command separately or together.
+
+Example 1.
+
+```json
+{
+    ...
+    "projects": {
+        "freeCodeCamp": {
+            "user": "specific_user",
+            "originUrl": "git@github.com:freeCodeCamp/freeCodeCamp.git",
+            "branches": {
+                "main": "main",
+                "dev": "develop"
+            },
+            "commands": {
+                "update": "git checkout <branch> && git prune && git pull origin <branch>"
+            },
+        },
+        "pm2": {
+            "isRunnable": false,
+            "cwd": "/Users/user-name/Documents/code2",
+            "originUrl": "git@github.com:Unitech/pm2.git",
+            "branches": {
+                "main": "master",
+                "dev": "development"
+            },
+            "commands": {
+                "install": "git install --force",
+            },
+        }
+    }
+}
+```
+
+#### Define `SCRIPTS`
+
+It is posible to define custom scripts using the [Config file](#config-file).
+
+**TO ALL PROJECTS** Define `scripts` property in the general section of the [Config file](#config-file).
+You can define each script separately or together.
+
+Example 1.
+
+```json
+{
+    "cwd": "/Users/user-name/Documents/code",
+    "user": "general_user",
+    "script": {
+        "dev": "npm run build && npm run dev",
+        "stash": "git stash",
+        "stash:pop": "git stash"
+    },
+    "projects": {
+        ...
+    }
+}
+```
+
+**TO EACH PROJECT** Define `scripts` property in each project section of your [Config file](#config-file).
+You can define each script separately or together.
+
+Example 1.
+
+```json
+{
+    ...
+    "projects": {
+        "freeCodeCamp": {
+            "user": "specific_user",
+            "originUrl": "git@github.com:freeCodeCamp/freeCodeCamp.git",
+            "branches": {
+                "main": "main",
+                "dev": "develop"
+            },
+            "script": {
+                "dev": "npm run build && npm run dev"
+            }
+        },
+        "pm2": {
+            "isRunnable": false,
+            "cwd": "/Users/user-name/Documents/code2",
+            "originUrl": "git@github.com:Unitech/pm2.git",
+            "branches": {
+                "main": "master",
+                "dev": "development"
+            },
+            "script": {
+                "stash": "git stash"
             }
         }
     }

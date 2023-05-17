@@ -6,7 +6,8 @@ import { constants } from "../constants";
  */
 export const err = (message: string | Error): void => {
     if (message instanceof Error)
-        return console.error(`${constants.PREFIX_MSG_ERR}${message.message}`);
+        return console.error(`${constants.PREFIX_MSG_ERR}${message.message}
+    ${message.stack}`);
     return console.error(`${constants.PREFIX_MSG_ERR}${message}`);
 }
 
