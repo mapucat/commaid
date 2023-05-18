@@ -21,9 +21,10 @@
 
 Manage several projects simultaneously in one place
 
-**Important:**
+**IMPORTANT:**
 
-This project includes code adapted from PM2 by Strzelewicz Alexandre, available at [PM2](https://www.npmjs.com/package/pm2), licensed under the GNU AGPL 3.0 license.
+- This project includes code adapted from PM2 by Strzelewicz Alexandre, available at [PM2](https://www.npmjs.com/package/pm2), licensed under the GNU AGPL 3.0 license.
+- This tool is not able run several projects at the same time, you have to install other packages like [PM2](https://www.npmjs.com/package/pm2) or [concurrently](https://www.npmjs.com/package/concurrently).
 
 ## Requirements
 
